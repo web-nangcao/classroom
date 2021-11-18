@@ -1,0 +1,8 @@
+.topbar {
+    height: 100px;
+}
+
+.topBarItem {
+    display: flex;
+    align-items: center;
+}
