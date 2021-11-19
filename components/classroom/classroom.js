@@ -26,8 +26,8 @@ export default function ClassRoom() {
         </Typography>
       </CardContent>
       <CardActions className={ClassroomStyle.cardFooter}>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+        <Button size="small">Open your Work</Button>
+        <Button size="small">Open in new Tab</Button>
       </CardActions>
     </Card>
   );
