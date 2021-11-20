@@ -10,7 +10,7 @@ import ClassroomStyle from "./classroom.module.css";
 
 export default function ClassRoom() {
   return (
-    <Card sx={{ maxWidth: 345 }} className={ClassroomStyle.cardClassroom}>
+    <Card sx={{ maxWidth: "400px" }} className={ClassroomStyle.cardClassroom}>
       <CardMedia
         component="img"
         alt="green iguana"

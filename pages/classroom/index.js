@@ -1,6 +1,8 @@
 import Head from "next/head";
 import Image from "next/image";
 
+import Grid from "@mui/material/Grid";
+
 import styles from "../../styles/Home.module.css";
 
 import Layout from "../../components/layout";
@@ -10,6 +12,7 @@ import MenuBar from "../../components/menuBar/menubar";
 import ClassRoom from "../../components/classroom/classroom";
 
 export default function ClassRoomPage() {
+  const listClass = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
     <Layout>
       <>
@@ -21,7 +24,15 @@ export default function ClassRoomPage() {
           </Head>
           <TopBar></TopBar>
           <MenuBar></MenuBar>
-          <ClassRoom></ClassRoom>
+          <Grid container>
+            {listClass.map((classRoom) => {
+              return (
+                <Grid item xs={3}>
+                  <ClassRoom></ClassRoom>
+                </Grid>
+              );
+            })}
+          </Grid>
         </div>
       </>
     </Layout>
