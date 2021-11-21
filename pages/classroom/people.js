@@ -19,7 +19,35 @@ import styles from "../../styles/util.module.css";
 
 import peopleStyle from "../../styles/classroom.people.module.css";
 
-export default function ClassRoomPage() {
+import libClassroom from "../../lib/classroom";
+
+export async function getStaticProps() {
+  const teacherList = [
+    { personName: "Dương Bội Long" },
+    { personName: "Võ Thế Minh" },
+    { personName: "Phạm Tống Bình Minh" },
+  ];
+  const studentList = [
+    { personName: "Phạm Tống Bình Minh" },
+    { personName: "Võ Thế Minh" },
+
+    { personName: "Dương Bội Long" },
+
+    { personName: "Dương Bội Long" },
+
+    { personName: "Dương Bội Long" },
+
+    { personName: "Dương Bội Long" },
+  ];
+  return {
+    props: {
+      teacherList,
+      studentList,
+    },
+  };
+}
+
+export default function ClassRoomPage({ teacherList, studentList }) {
   return (
     <Layout>
       <>
@@ -32,48 +60,47 @@ export default function ClassRoomPage() {
         <div className={styles.classContentPeopleContainer}>
           <Grid container spacing={2}>
             <Grid item xs={10}>
-              <h1 style={{ color: "#1967D3" }}>Teacher</h1>
+              <h1 style={{ color: "#1967D3" }}>Teachers</h1>
             </Grid>
             <Grid item xs={2}>
-              <p className={peopleStyle.number}>Number</p>
+              <p className={peopleStyle.number}>
+                {teacherList.length} teachers
+              </p>
             </Grid>
           </Grid>
           <List>
-            <ListItem>
-              <Person></Person>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <Person></Person>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <Person></Person>
-            </ListItem>
-            <Divider />
+            {teacherList.map((teacher) => {
+              return (
+                <>
+                  <ListItem>
+                    <Person personName={teacher.personName}></Person>
+                  </ListItem>
+                  <Divider />
+                </>
+              );
+            })}
           </List>
           <Grid container spacing={2}>
             <Grid item xs={10}>
-              <h1 style={{ color: "#1967D3" }}>Classmates</h1>
+              <h1 style={{ color: "#1967D3" }}>Students</h1>
             </Grid>
             <Grid item xs={2}>
-              <p className={peopleStyle.number}>Number</p>
+              <p className={peopleStyle.number}>
+                {studentList.length} students
+              </p>
             </Grid>
           </Grid>
           <List>
-            <ListItem>
-              <Person></Person>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <Person></Person>
-            </ListItem>
-
-            <Divider />
-            <ListItem>
-              <Person></Person>
-            </ListItem>
-            <Divider />
+            {studentList.map((student) => {
+              return (
+                <>
+                  <ListItem>
+                    <Person personName={student.personName}></Person>
+                  </ListItem>
+                  <Divider />
+                </>
+              );
+            })}
           </List>
         </div>
       </>

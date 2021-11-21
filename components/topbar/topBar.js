@@ -11,6 +11,8 @@ import AddIcon from "@mui/icons-material/Add";
 import DialpadIcon from "@mui/icons-material/Dialpad";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
+import Link from "next/link";
+
 import DrawerLeftSide from "./drawerLeftSide";
 
 import { styled } from "@mui/material/styles";
@@ -82,7 +84,9 @@ export default function TopBar() {
             <DrawerLeftSide></DrawerLeftSide>
           </Grid>
           <Grid item xs className={topBarStyle.topBarItem}>
-            Classroom Vip pro
+            <Link href="/classroom">
+              <a className={topBarStyle.ClassVipPro}>Class Vip Pro</a>
+            </Link>
           </Grid>
           <Grid item xs={0.5} className={topBarStyle.topBarItem}>
             <IconButton
@@ -101,7 +105,11 @@ export default function TopBar() {
             <DialpadIcon></DialpadIcon>
           </Grid>
           <Grid item xs={0.5} className={topBarStyle.topBarItem}>
-            <AccountCircleIcon></AccountCircleIcon>
+            <Link href="/profile">
+              <a>
+                <AccountCircleIcon> </AccountCircleIcon>
+              </a>
+            </Link>
           </Grid>
           {AddMenu}
         </Grid>

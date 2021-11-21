@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 
-export default function SimplePaper() {
+export default function SimplePaper({ classroomName }) {
   return (
     <Box
       sx={{
@@ -28,7 +28,7 @@ export default function SimplePaper() {
           padding: "170px 0 0 50px",
         }}
       >
-        [CQ] PTUDWNC - 18 _3 PTUDWNC{" "}
+        {classroomName}
       </Paper>{" "}
     </Box>
   );

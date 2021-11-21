@@ -11,8 +11,18 @@ import TopBar from "../../components/topbar/topBar";
 import MenuBar from "../../components/menuBar/menubar";
 import ClassRoom from "../../components/classroom/classroom";
 
-export default function ClassRoomPage() {
-  const listClass = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+import libClassroom from "../../lib/classroom";
+
+export async function getStaticProps() {
+  const listClass = libClassroom;
+  return {
+    props: {
+      listClass,
+    },
+  };
+}
+
+export default function ClassRoomPage({ listClass }) {
   return (
     <Layout>
       <>
@@ -28,7 +38,7 @@ export default function ClassRoomPage() {
             {listClass.map((classRoom) => {
               return (
                 <Grid item xs={3}>
-                  <ClassRoom></ClassRoom>
+                  <ClassRoom classroom={classRoom}></ClassRoom>
                 </Grid>
               );
             })}

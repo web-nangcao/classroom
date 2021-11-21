@@ -14,7 +14,24 @@ import Lesson from "../../components/classroom/detail/lesson";
 import Banner from "../../components/classroom/detail/bannerClassDetail";
 import Upcoming from "../../components/classroom/detail/upComingHomeWork";
 
-export default function ClassRoomPage() {
+import libClassroom from "../../lib/classroom";
+
+export async function getStaticProps() {
+  const classDetail = libClassroom[1];
+  return {
+    props: {
+      classDetail,
+    },
+  };
+}
+
+export default function ClassroomDetailPage({ classDetail }) {
+  const listLesson = [
+    { personPost: classDetail.host },
+    { personPost: classDetail.host },
+    { personPost: classDetail.host },
+    { personPost: classDetail.host },
+  ];
   return (
     <Layout>
       <>
@@ -26,17 +43,16 @@ export default function ClassRoomPage() {
 
         <TopBarClassDetail></TopBarClassDetail>
         <div className={styles.classContentDetailContainer}>
-          <Banner></Banner>
+          <Banner classroomName={classDetail.className}></Banner>
           <Grid container spacing={2}>
             <Grid item xs={3}>
               <Upcoming></Upcoming>
             </Grid>{" "}
             <Grid item xs={9}>
               <Stack spacing={2}>
-                <Lesson></Lesson>
-                <Lesson></Lesson>
-                <Lesson></Lesson>
-                <Lesson></Lesson>
+                {listLesson.map((lesson) => {
+                  return <Lesson lesson={lesson}></Lesson>;
+                })}
               </Stack>
             </Grid>{" "}
           </Grid>{" "}

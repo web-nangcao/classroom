@@ -12,7 +12,7 @@ import lessonStyle from "./lesson.module.css";
 import ContentAttached from "./contentAttach";
 import Comment from "./comment";
 
-export default function Lesson() {
+export default function Lesson({ lesson }) {
   return (
     <Box
       sx={{
@@ -38,7 +38,7 @@ export default function Lesson() {
               />
             </Grid>
             <Grid item xs={10}>
-              <p className={lessonStyle.teacherName}>Khánh Nguyễn Huy</p>
+              <p className={lessonStyle.teacherName}>{lesson.personPost}</p>
             </Grid>
             <Grid item xs={1}>
               <Button>

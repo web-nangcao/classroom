@@ -10,6 +10,8 @@ import IconButton from "@mui/material/IconButton";
 import DialpadIcon from "@mui/icons-material/Dialpad";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
+import Link from "next/link";
+
 import DrawerLeftSide from "./drawerLeftSide";
 
 import { styled } from "@mui/material/styles";
@@ -46,27 +48,41 @@ export default function topBarClassDetail() {
       >
         <Grid container spacing={2}>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <DrawerLeftSide> </DrawerLeftSide>{" "}
-          </Grid>{" "}
+            <DrawerLeftSide> </DrawerLeftSide>
+          </Grid>
           <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
-            Classroom Vip pro{" "}
-          </Grid>{" "}
+            <Link href="/classroom">
+              <a className={topBarClassDetailStyle.ClassVipPro}>
+                Class Vip Pro
+              </a>
+            </Link>
+          </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            Stream{" "}
-          </Grid>{" "}
+            <Link href="/classroom/detail">
+              <a>Stream</a>
+            </Link>
+          </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            Classwork{" "}
-          </Grid>{" "}
+            <Link href="/classroom/detail">
+              <a>Class Work</a>
+            </Link>
+          </Grid>
           <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
-            People{" "}
-          </Grid>{" "}
+            <Link href="/classroom/people">
+              <a>People</a>
+            </Link>
+          </Grid>
           <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
-            <DialpadIcon> </DialpadIcon>{" "}
-          </Grid>{" "}
+            <DialpadIcon> </DialpadIcon>
+          </Grid>
           <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
-            <AccountCircleIcon> </AccountCircleIcon>{" "}
-          </Grid>{" "}
-        </Grid>{" "}
+            <Link href="/profile">
+              <a>
+                <AccountCircleIcon> </AccountCircleIcon>
+              </a>
+            </Link>
+          </Grid>
+        </Grid>
       </Box>
     </Paper>
   );

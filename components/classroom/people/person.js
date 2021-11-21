@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 
 import personStyle from "./person.module.css";
 
-export default function Person() {
+export default function Person({ personName }) {
   return (
     <>
       <Grid container spacing={2}>
@@ -18,7 +18,7 @@ export default function Person() {
           />
         </Grid>
         <Grid item xs={11} className={personStyle.personName}>
-          <p>Khánh Nguyễn Huy</p>
+          <p>{personName}</p>
         </Grid>
       </Grid>
     </>
