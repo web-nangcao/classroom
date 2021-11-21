@@ -37,35 +37,37 @@ export default function topBarClassDetail() {
   };
   const menuId = "primary-search-account-menu";
   return (
-    <Box
-      sx={{ flexGrow: 1 }}
-      className={topBarClassDetailStyle.topbar}
-      display="flex"
-      justifyContent="center"
-    >
-      <Grid container spacing={2}>
-        <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-          <DrawerLeftSide> </DrawerLeftSide>{" "}
+    <Paper className={topBarClassDetailStyle.container}>
+      <Box
+        sx={{ flexGrow: 1 }}
+        className={topBarClassDetailStyle.topbar}
+        display="flex"
+        justifyContent="center"
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
+            <DrawerLeftSide> </DrawerLeftSide>{" "}
+          </Grid>{" "}
+          <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
+            Classroom Vip pro{" "}
+          </Grid>{" "}
+          <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
+            Stream{" "}
+          </Grid>{" "}
+          <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
+            Classwork{" "}
+          </Grid>{" "}
+          <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
+            People{" "}
+          </Grid>{" "}
+          <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
+            <DialpadIcon> </DialpadIcon>{" "}
+          </Grid>{" "}
+          <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
+            <AccountCircleIcon> </AccountCircleIcon>{" "}
+          </Grid>{" "}
         </Grid>{" "}
-        <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
-          Classroom Vip pro{" "}
-        </Grid>{" "}
-        <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-          Stream{" "}
-        </Grid>{" "}
-        <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-          Classwork{" "}
-        </Grid>{" "}
-        <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
-          People{" "}
-        </Grid>{" "}
-        <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
-          <DialpadIcon> </DialpadIcon>{" "}
-        </Grid>{" "}
-        <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
-          <AccountCircleIcon> </AccountCircleIcon>{" "}
-        </Grid>{" "}
-      </Grid>{" "}
-    </Box>
+      </Box>
+    </Paper>
   );
 }

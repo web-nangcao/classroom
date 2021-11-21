@@ -70,40 +70,42 @@ export default function TopBar() {
   );
 
   return (
-    <Box
-      sx={{ flexGrow: 1 }}
-      className={topBarStyle.topbar}
-      display="flex"
-      justifyContent="center"
-    >
-      <Grid container spacing={2}>
-        <Grid item xs={1} className={topBarStyle.topBarItem}>
-          <DrawerLeftSide></DrawerLeftSide>
+    <Paper className={topBarStyle.topBarContainer}>
+      <Box
+        sx={{ flexGrow: 1 }}
+        className={topBarStyle.topbar}
+        display="flex"
+        justifyContent="center"
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={1} className={topBarStyle.topBarItem}>
+            <DrawerLeftSide></DrawerLeftSide>
+          </Grid>
+          <Grid item xs className={topBarStyle.topBarItem}>
+            Classroom Vip pro
+          </Grid>
+          <Grid item xs={0.5} className={topBarStyle.topBarItem}>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AddIcon />
+            </IconButton>
+          </Grid>
+          <Grid item xs={0.5} className={topBarStyle.topBarItem}>
+            <DialpadIcon></DialpadIcon>
+          </Grid>
+          <Grid item xs={0.5} className={topBarStyle.topBarItem}>
+            <AccountCircleIcon></AccountCircleIcon>
+          </Grid>
+          {AddMenu}
         </Grid>
-        <Grid item xs className={topBarStyle.topBarItem}>
-          Classroom Vip pro
-        </Grid>
-        <Grid item xs={0.5} className={topBarStyle.topBarItem}>
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="account of current user"
-            aria-controls={menuId}
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="inherit"
-          >
-            <AddIcon />
-          </IconButton>
-        </Grid>
-        <Grid item xs={0.5} className={topBarStyle.topBarItem}>
-          <DialpadIcon></DialpadIcon>
-        </Grid>
-        <Grid item xs={0.5} className={topBarStyle.topBarItem}>
-          <AccountCircleIcon></AccountCircleIcon>
-        </Grid>
-        {AddMenu}
-      </Grid>
-    </Box>
+      </Box>
+    </Paper>
   );
 }
