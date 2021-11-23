@@ -21,19 +21,16 @@ export default function Logout() {
 
     const access_token = Cookie.get("accesstoken");
 
-    axiosApiCall("api/logout", "post", { access_token }).then((res) => {
-
-      Cookie.set("user", res.data.user);
-      Cookie.set("accesstoken", res.data.accesstoken);
-
-      router.push("/");
+    axiosApiCall("auth/logout", "post", { access_token }).then((res) => {
     }).catch(function (error) {
       if (error.response) {
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
       }
-    });;
+    });
+    
+    // remove accessToken
     Cookie.set("accesstoken", null);
     Cookie.set("user", null);
     router.push("/login");
