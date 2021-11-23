@@ -7,21 +7,24 @@ import { useRouter } from "next/router";
 import Cookie from "js-cookie";
 
 
-const axiosApiCall = (url, method, body = {}) =>
+const axiosApiCall = (url, method, body , headers = {}) =>
   axios({
     method,
     url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
     data: body,
+    headers : headers,
   });
 
 export default function Logout() {
   const router = useRouter();
 
-  const handleLogin = () => {
+  const handleLogout = () => {
 
     const access_token = Cookie.get("accesstoken");
-
-    axiosApiCall("auth/logout", "post", { access_token }).then((res) => {
+    const headers = {authorization : `bearer ${access_token}`}
+    console.log(access_token);
+    axiosApiCall("auth/logout", "get", { access_token } , headers ).then((res) => {
+      console.log("send logout request");
     }).catch(function (error) {
       if (error.response) {
         console.log(error.response.data);
@@ -29,15 +32,15 @@ export default function Logout() {
         console.log(error.response.headers);
       }
     });
-    
+
     // remove accessToken
-    Cookie.set("accesstoken", null);
-    Cookie.set("user", null);
+    Cookie.remove("accesstoken");
+    Cookie.remove("user");
     router.push("/login");
   };
 
   return (
-    <Button onClick={handleLogin} variant="outlined" startIcon={<LogoutIcon />}>
+    <Button onClick={handleLogout} variant="outlined" startIcon={<LogoutIcon />}>
     </Button>
   );
 }
