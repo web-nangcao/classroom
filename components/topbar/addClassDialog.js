@@ -73,7 +73,6 @@ export const FormWithHookForm = () => {
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
     console.log(data);
-    console.log("hello");
   };
 
   return (

@@ -29,7 +29,6 @@ export default function ClassRoomPage({ listClass }) {
   return (
     <Layout>
       <>
-        <Session countInfor={count}></Session>
         <div className={styles.container}>
           <Head>
             <title>Class List</title>
