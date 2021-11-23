@@ -9,7 +9,12 @@ import Session from "../lib/useSession";
 
 import { checkaccessToken } from "../services/user.service";
 export default function Home() {
-  const user = Cookie.get("user") ? JSON.parse(Cookie.get("user")) : {};
+  const user = {};
+  if (Cookie.get("user") != undefined) {
+    user = JSON.parse(Cookie.get("user"));
+    console.log("user");
+    console.log(user);
+  }
   const access_token = Cookie.get("accesstoken");
 
   checkaccessToken();

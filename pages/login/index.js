@@ -41,7 +41,7 @@ export default function Login() {
       .then((res) => {
         console.log(res);
 
-        Cookie.set("user", res.data.user);
+        Cookie.set("user", JSON.stringify(res.data.user));
         Cookie.set("accesstoken", res.data.access_token);
 
         router.push("/");
@@ -70,10 +70,9 @@ export default function Login() {
         <Grid align="center">
           <Avatar style={avatarStyle}>
             <LockOutlinedIcon />
-          </Avatar>
-          <h2>Sign In</h2>
+          </Avatar>{" "}
+          <h2> Sign In </h2>{" "}
         </Grid>
-
         <Button
           type="submit"
           color="primary"
@@ -83,15 +82,14 @@ export default function Login() {
         >
           Sign in
         </Button>
-
         <GoogleLogin
           clientId={config.env.GOOGLE_CLIENT_ID}
           buttonText="Log in with Google"
           onSuccess={handleLogin}
           onFailure={handleLogin}
           cookiePolicy={"single_host_origin"}
-        />
-      </Paper>
+        />{" "}
+      </Paper>{" "}
     </Grid>
   );
 }

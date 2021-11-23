@@ -1,3 +1,8 @@
+.topbarWrapper {
+    position: fixed;
+    top: 0;
+}
+
 .topbar {
     height: 100px;
 }
@@ -16,4 +21,7 @@
 
 .topBarContainer {
     margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
 }
