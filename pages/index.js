@@ -3,8 +3,16 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import TopBar from "../components/topbar/topBar";
 import MenuBar from "../components/menuBar/menubar";
+import Cookie from "js-cookie";
 
 export default function Home() {
+
+  const user = Cookie.get('user');
+  const access_token = Cookie.get('accesstoken');
+
+  console.log(user);
+  console.log(access_token);
+
   return (
     <div className={styles.container}>
       <TopBar></TopBar>

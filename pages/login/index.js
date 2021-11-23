@@ -4,8 +4,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
 import axios from "axios";
 import { useRouter } from "next/router";
-
-
+import Cookie from "js-cookie";
 import config from "../../next.config"
 
 const axiosApiCall = (url, method, body = {}) =>
@@ -17,7 +16,7 @@ const axiosApiCall = (url, method, body = {}) =>
 
 
 export default function Login() {
-
+    
     // const handleLogin = async googleData => {
     //     console.log(googleData.accessToken);
     //     // const url = "https://webctt2-classroom-server.heroku.com/auth/google/auth/google";
@@ -34,20 +33,23 @@ export default function Login() {
     //     // store returned user somehow
     // }
 
-    // const router = useRouter();
+    const router = useRouter();
 
     const handleLogin = (response) => {
 
         const access_token = response.accessToken;
-        console.log("data!");
-       
-        axiosApiCall("oauth/google", "post", { access_token }).then((res) => {
-            console.log("data");
-            console.log(res);
 
-            const { user, token } = res.data;
+        console.log(response);
+        
+        axiosApiCall("api/oauth_google", "post", { access_token }).then((res) => {
+           
+            
+           
 
-            // router.push("/");
+            Cookie.set("user", res.data.user);
+            Cookie.set("accesstoken", res.data.accesstoken);
+
+            router.push("/");
         }).catch(function (error) {
             if (error.response) {
               console.log(error.response.data);
