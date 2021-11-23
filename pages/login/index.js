@@ -41,10 +41,9 @@ export default function Login() {
 
         console.log(response);
         
-        axiosApiCall("api/oauth_google", "post", { access_token }).then((res) => {
+        axiosApiCall("auth/google-token", "post", { access_token }).then((res) => {
            
-            
-           
+            console.log(res);
 
             Cookie.set("user", res.data.user);
             Cookie.set("accesstoken", res.data.accesstoken);
