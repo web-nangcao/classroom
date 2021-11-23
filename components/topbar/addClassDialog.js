@@ -19,6 +19,16 @@ import { Controller, useForm } from "react-hook-form";
 
 import addClassDialogStyle from "./addClassDialog.module.css";
 
+import axios from "axios";
+
+const axiosApiCall = (url, method, headers = {}) =>
+  axios({
+    method,
+    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
+    data: {},
+    headers: headers,
+  });
+
 function SimpleDialog(props) {
   const { onClose, selectedValue, open } = props;
 
@@ -33,7 +43,9 @@ function SimpleDialog(props) {
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Add a new class</DialogTitle>
-      <FormWithHookForm></FormWithHookForm>
+      <FormWithHookForm
+        handleAddClass={props.handleAddClass}
+      ></FormWithHookForm>
     </Dialog>
   );
 }
@@ -44,7 +56,7 @@ SimpleDialog.propTypes = {
   selectedValue: PropTypes.string.isRequired,
 };
 
-export default function AddClassDialog() {
+export default function AddClassDialog({ handleAddClass }) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState("emails[1]");
 
@@ -64,15 +76,17 @@ export default function AddClassDialog() {
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
+        handleAddClass={handleAddClass}
       />
     </div>
   );
 }
 
-export const FormWithHookForm = () => {
+export const FormWithHookForm = ({ handleAddClass }) => {
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("hello");
+    handleAddClass(data);
   };
 
   return (
