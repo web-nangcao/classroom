@@ -16,8 +16,8 @@ import profileStyle from "../../styles/profile.module.css";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-export default function ClassRoomPage() {
-  const { handleSubmit, reset, control } = useForm();
+export default function ProfilePage() {
+  const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => console.log(data);
 
   return (
@@ -54,6 +54,7 @@ export default function ClassRoomPage() {
                       defaultValue=""
                       onChange={onChange}
                       className={profileStyle.textField}
+                      {...register("txtName")}
                     />
                     <br></br>
                   </div>
@@ -66,6 +67,7 @@ export default function ClassRoomPage() {
                       defaultValue=""
                       onChange={onChange}
                       className={profileStyle.textField}
+                      {...register("txtCode")}
                     />
                     <br></br>
                   </div>
@@ -108,7 +110,7 @@ export default function ClassRoomPage() {
                 Reset
               </Button>
               <Button
-                onClick={() => reset()}
+                onClick={handleSubmit(onSubmit)}
                 className={profileStyle.button}
                 variant="contained"
               >
