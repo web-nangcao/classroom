@@ -1,9 +1,10 @@
-import React from 'react'
+import React from "react";
 import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
 import axios from "axios";
 import { useRouter } from "next/router";
+import {  useEffect } from 'react';
 import Cookie from "js-cookie";
 import config from "../../next.config"
 
@@ -16,46 +17,40 @@ const axiosApiCall = (url, method, body = {}) =>
 
 
 export default function Login() {
-    
-    // const handleLogin = async googleData => {
-    //     console.log(googleData.accessToken);
-    //     // const url = "https://webctt2-classroom-server.heroku.com/auth/google/auth/google";
-    //     const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}oauth/google`;
-    //     const res = await fetch(url, {
-    //         method: "POST",
-    //         data: googleData.accessToken,
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         }
-    //     })
-    //     const data = await res.json()
-    //     console.log(data);
-    //     // store returned user somehow
-    // }
+
 
     const router = useRouter();
+    
+    
+    const access_token = Cookie.get("accesstoken")
+    console.log("access token ",access_token)
+    if (access_token !== undefined) {
+        router.push('/');
+    }
 
+  
+   
     const handleLogin = (response) => {
 
         const access_token = response.accessToken;
 
         console.log(response);
-        
+
         axiosApiCall("auth/google-token", "post", { access_token }).then((res) => {
-           
+
             console.log(res);
 
             Cookie.set("user", res.data.user);
-            Cookie.set("accesstoken", res.data.accesstoken);
+            Cookie.set("accesstoken", res.data.access_token);
 
             router.push("/");
         }).catch(function (error) {
             if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
             }
-          });;
+        });;
     };
 
 

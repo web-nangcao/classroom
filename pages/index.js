@@ -7,13 +7,13 @@ import Cookie from "js-cookie";
 
 import Session from "../lib/useSession";
 
+import {checkaccessToken} from "../services/user.service"
 export default function Home() {
 
   const user = Cookie.get('user');
   const access_token = Cookie.get('accesstoken');
 
-  console.log(user);
-  console.log(access_token);
+  checkaccessToken();
 
   return (
     <div className={styles.container}>
