@@ -9,15 +9,13 @@ import Session from "../lib/useSession";
 
 import {checkaccessToken} from "../services/user.service"
 export default function Home() {
-
-  const user = Cookie.get('user');
-  const access_token = Cookie.get('accesstoken');
+  const user = Cookie.get("user");
+  const access_token = Cookie.get("accesstoken");
 
   checkaccessToken();
 
   return (
     <div className={styles.container}>
-      <Session></Session>
       <TopBar></TopBar>
       <MenuBar></MenuBar>
       <Head>
