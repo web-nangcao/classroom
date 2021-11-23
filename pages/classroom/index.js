@@ -13,6 +13,8 @@ import ClassRoom from "../../components/classroom/classroom";
 
 import libClassroom from "../../lib/classroom";
 
+import Session from "../../lib/useSession";
+
 export async function getStaticProps() {
   const listClass = libClassroom;
   return {
@@ -23,9 +25,11 @@ export async function getStaticProps() {
 }
 
 export default function ClassRoomPage({ listClass }) {
+  const count = 2;
   return (
     <Layout>
       <>
+        <Session countInfor={count}></Session>
         <div className={styles.container}>
           <Head>
             <title>Class List</title>

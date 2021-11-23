@@ -3,18 +3,18 @@ import Image from "next/image";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 
-import styles from "../../styles/util.module.css";
+import styles from "../../../styles/util.module.css";
 
-import Layout from "../../components/layout";
+import Layout from "../../../components/layout";
 
-import TopBarClassDetail from "../../components/topBarClassDetail/topBarClassDetail";
-import MenuBar from "../../components/menuBar/menubar";
-import ClassRoom from "../../components/classroom/classroom";
-import Lesson from "../../components/classroom/detail/lesson";
-import Banner from "../../components/classroom/detail/bannerClassDetail";
-import Upcoming from "../../components/classroom/detail/upComingHomeWork";
+import TopBarClassDetail from "../../../components/topBarClassDetail/topBarClassDetail";
+import MenuBar from "../../../components/menuBar/menubar";
+import ClassRoom from "../../../components/classroom/classroom";
+import Lesson from "../../../components/classroom/detail/lesson";
+import Banner from "../../../components/classroom/detail/bannerClassDetail";
+import Upcoming from "../../../components/classroom/detail/upComingHomeWork";
 
-import libClassroom from "../../lib/classroom";
+import libClassroom from "../../../lib/classroom";
 
 export async function getStaticProps() {
   const classDetail = libClassroom[1];

@@ -5,6 +5,8 @@ import TopBar from "../components/topbar/topBar";
 import MenuBar from "../components/menuBar/menubar";
 import Cookie from "js-cookie";
 
+import Session from "../lib/useSession";
+
 export default function Home() {
 
   const user = Cookie.get('user');
@@ -15,6 +17,7 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <Session></Session>
       <TopBar></TopBar>
       <MenuBar></MenuBar>
       <Head>
