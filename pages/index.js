@@ -17,8 +17,14 @@ export default function Home() {
   }
   const access_token = Cookie.get("accesstoken");
 
-  checkaccessToken();
+  const isLogin = checkaccessToken();
 
+  if(!isLogin){
+    
+      return ( //
+          <Redirect to='/login' />
+      );
+  }
   return (
     <div className={styles.container}>
       <TopBar></TopBar>
