@@ -9,7 +9,7 @@ import Session from "../lib/useSession";
 
 import { checkaccessToken } from "../services/user.service";
 export default function Home() {
-  const user = JSON.parse(Cookie.get("user"));
+  const user = Cookie.get("user") ? JSON.parse(Cookie.get("user")) : {};
   const access_token = Cookie.get("accesstoken");
 
   checkaccessToken();
