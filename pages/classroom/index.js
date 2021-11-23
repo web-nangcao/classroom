@@ -13,8 +13,6 @@ import ClassRoom from "../../components/classroom/classroom";
 
 import libClassroom from "../../lib/classroom";
 
-
-import config from "../../next.config"
 export async function getStaticProps() {
   const listClass = libClassroom;
   return {

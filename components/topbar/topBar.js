@@ -21,6 +21,9 @@ import topBarStyle from "./topBar.module.css";
 
 import AddClassDialog from "./addClassDialog";
 
+
+import LogoutBtn from "../logout/logout";
+
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
@@ -110,6 +113,9 @@ export default function TopBar() {
                 <AccountCircleIcon> </AccountCircleIcon>
               </a>
             </Link>
+          </Grid>
+          <Grid item xs={1} className={topBarStyle.topBarItem}>
+              <LogoutBtn/>
           </Grid>
           {AddMenu}
         </Grid>
