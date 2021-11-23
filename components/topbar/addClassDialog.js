@@ -70,8 +70,11 @@ export default function AddClassDialog() {
 }
 
 export const FormWithHookForm = () => {
-  const { handleSubmit, reset, control } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const { register, handleSubmit, reset, control } = useForm();
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log("hello");
+  };
 
   return (
     <form className={addClassDialogStyle.container}>
@@ -85,6 +88,7 @@ export const FormWithHookForm = () => {
               id="outlined-required"
               label="Class name:"
               defaultValue=""
+              {...register("txtClassName")}
               onChange={onChange}
               className={addClassDialogStyle.textField}
             />
@@ -92,7 +96,8 @@ export const FormWithHookForm = () => {
             <TextField
               required
               id="outlined-required"
-              label="Section: "
+              label="Topic: "
+              {...register("txtTopic")}
               defaultValue=""
               onChange={onChange}
               className={addClassDialogStyle.textField}
@@ -102,7 +107,9 @@ export const FormWithHookForm = () => {
               required
               id="outlined-required"
               label="Discription:"
+              {...register("txtDiscription")}
               defaultValue=""
+              disabled
               onChange={onChange}
               className={addClassDialogStyle.textField}
             />
@@ -112,6 +119,7 @@ export const FormWithHookForm = () => {
               id="outlined-required"
               label="Room:"
               defaultValue=""
+              disabled
               onChange={onChange}
               className={addClassDialogStyle.textField}
             />

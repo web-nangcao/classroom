@@ -4,9 +4,12 @@ import styles from "../styles/Home.module.css";
 import TopBar from "../components/topbar/topBar";
 import MenuBar from "../components/menuBar/menubar";
 
+import Session from "../lib/useSession";
+
 export default function Home() {
   return (
     <div className={styles.container}>
+      <Session></Session>
       <TopBar></TopBar>
       <MenuBar></MenuBar>
       <Head>
