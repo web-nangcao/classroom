@@ -41,3 +41,11 @@
 .button {
     margin-left: 30px;
 }
+
+.alert {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    margin-top: 50px;
+}

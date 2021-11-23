@@ -73,7 +73,7 @@ export default function ClassRoomPage({ listClassTest }) {
         console.log("response:");
         console.log(res.data.resValue);
         const newClassList = JSON.parse(JSON.stringify(listClass));
-        newClassList.push(res.data.resValue);
+        newClassList.push(res.data.resValue.classroom);
         setlistClass(newClassList);
         console.log(newClassList);
       })
@@ -98,6 +98,8 @@ export default function ClassRoomPage({ listClassTest }) {
           <MenuBar> </MenuBar>{" "}
           <Grid container>
             {listClass.map((classRoom, index) => {
+              console.log("map function");
+              console.log(classRoom);
               return (
                 <Grid item xs={3} key={index}>
                   <ClassRoom classroom={classRoom}> </ClassRoom>{" "}
