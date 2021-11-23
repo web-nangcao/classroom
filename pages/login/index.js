@@ -23,7 +23,6 @@ const axiosApiCall = (url, method, body = {}) =>
   });
 
 export default function Login() {
-<<<<<<< HEAD
   // const handleLogin = async googleData => {
   //     console.log(googleData.accessToken);
   //     // const url = "https://webctt2-classroom-server.heroku.com/auth/google/auth/google";
@@ -47,11 +46,12 @@ export default function Login() {
 
     console.log(response);
 
-    axiosApiCall("api/oauth_google", "post", { access_token })
+    axiosApiCall("auth/google-token", "post", { access_token })
       .then((res) => {
-        Cookie.set("user", res.data.user);
-        Cookie.set("accesstoken", res.data.accesstoken);
-        console.log(Cookie.get("user"));
+        Cookie.set("user", JSON.stringify(res.data.user));
+        Cookie.set("accesstoken", res.data.access_token);
+
+        console.log(res.data.user);
 
         router.push("/");
       })
@@ -79,79 +79,10 @@ export default function Login() {
         <Grid align="center">
           <Avatar style={avatarStyle}>
             <LockOutlinedIcon />
-          </Avatar>{" "}
-          <h2> Sign In </h2>{" "}
-=======
-    
-    // const handleLogin = async googleData => {
-    //     console.log(googleData.accessToken);
-    //     // const url = "https://webctt2-classroom-server.heroku.com/auth/google/auth/google";
-    //     const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}oauth/google`;
-    //     const res = await fetch(url, {
-    //         method: "POST",
-    //         data: googleData.accessToken,
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         }
-    //     })
-    //     const data = await res.json()
-    //     console.log(data);
-    //     // store returned user somehow
-    // }
-
-    const router = useRouter();
-
-    const handleLogin = (response) => {
-
-        const access_token = response.accessToken;
-
-        console.log(response);
-        
-        axiosApiCall("auth/google-token", "post", { access_token }).then((res) => {
-           
-            console.log(res);
-
-            Cookie.set("user", res.data.user);
-            Cookie.set("accesstoken", res.data.accesstoken);
-
-            router.push("/");
-        }).catch(function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            }
-          });;
-    };
-
-
-
-    const paperStyle = { padding: 20, height: '70vh', width: 280, margin: "20px auto" }
-    const avatarStyle = { backgroundColor: '#1bbd7e' }
-    const btnstyle = { margin: '8px 0' }
-
-    return (
-        <Grid>
-            <Paper elevation={10} style={paperStyle}>
-                <Grid align='center'>
-                    <Avatar style={avatarStyle}><LockOutlinedIcon /></Avatar>
-                    <h2>Sign In</h2>
-                </Grid>
-
-
-                <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth>Sign in</Button>
-
-
-                <GoogleLogin
-                    clientId={config.env.GOOGLE_CLIENT_ID}
-                    buttonText="Log in with Google"
-                    onSuccess={handleLogin}
-                    onFailure={handleLogin}
-                    cookiePolicy={'single_host_origin'}
-                />
-            </Paper>
->>>>>>> 9ac191b1416194d995d1a6549be155bd98591db0
+          </Avatar>
+          <h2>Sign In</h2>
         </Grid>
+
         <Button
           type="submit"
           color="primary"
@@ -161,14 +92,15 @@ export default function Login() {
         >
           Sign in
         </Button>
+
         <GoogleLogin
           clientId={config.env.GOOGLE_CLIENT_ID}
           buttonText="Log in with Google"
           onSuccess={handleLogin}
           onFailure={handleLogin}
           cookiePolicy={"single_host_origin"}
-        />{" "}
-      </Paper>{" "}
+        />
+      </Paper>
     </Grid>
   );
 }

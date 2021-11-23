@@ -8,10 +8,10 @@ import Cookie from "js-cookie";
 import Session from "../lib/useSession";
 
 export default function Home() {
-  const user = Cookie.get("user");
+  const user = JSON.parse(Cookie.get("user"));
   const access_token = Cookie.get("accesstoken");
 
-  console.log(user);
+  console.log(user.email);
   console.log(access_token);
 
   return (
