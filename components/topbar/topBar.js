@@ -21,7 +21,6 @@ import topBarStyle from "./topBar.module.css";
 
 import AddClassDialog from "./addClassDialog";
 
-
 import LogoutBtn from "../logout/logout";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -31,7 +30,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function TopBar() {
+export default function TopBar({ handleAddClass }) {
   const [anchorAdd, setAnchorAdd] = useState(null);
 
   const isMenuOpen = Boolean(anchorAdd);
@@ -69,7 +68,7 @@ export default function TopBar() {
     >
       <MenuItem onClick={joinClassClick}>Join Class</MenuItem>
       <MenuItem onClick={createClassClick}>
-        <AddClassDialog></AddClassDialog>
+        <AddClassDialog handleAddClass={handleAddClass}></AddClassDialog>
       </MenuItem>
     </Menu>
   );
@@ -115,7 +114,7 @@ export default function TopBar() {
             </Link>
           </Grid>
           <Grid item xs={1} className={topBarStyle.topBarItem}>
-              <LogoutBtn/>
+            <LogoutBtn />
           </Grid>
           {AddMenu}
         </Grid>
