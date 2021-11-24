@@ -28,6 +28,7 @@ export default function Login() {
 
   const access_token = Cookie.get("accesstoken");
   console.log("access token ", access_token);
+  console.log("env - test", config.env.GOOGLE_CLIENT_ID);
   if (access_token !== undefined) {
     router.push("/");
   }
@@ -79,23 +80,16 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>{" "}
           <h2> Sign In </h2>{" "}
-        </Grid>{" "}
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          style={btnstyle}
-          fullWidth
-        >
-          Sign in
-        </Button>{" "}
-        <GoogleLogin
-          clientId={config.env.GOOGLE_CLIENT_ID}
-          buttonText="Log in with Google"
-          onSuccess={handleLogin}
-          onFailure={handleLogin}
-          cookiePolicy={"single_host_origin"}
-        />{" "}
+        </Grid>
+        <Grid align="center">
+          <GoogleLogin
+            clientId={config.env.GOOGLE_CLIENT_ID}
+            buttonText="Log in with Google"
+            onSuccess={handleLogin}
+            onFailure={handleLogin}
+            cookiePolicy={"single_host_origin"}
+          />{" "}
+        </Grid>
       </Paper>{" "}
     </Grid>
   );
