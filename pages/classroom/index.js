@@ -41,16 +41,31 @@ export default function ClassRoomPage({ listClassTest }) {
   const router = useRouter();
 
   const [listClass, setlistClass] = useState([]);
+  const [user, setUser] = useState({});
   useLayoutEffect(() => {
+    Cookie.set("prePath", "/classroom");
     if (!Cookie.get("accesstoken")) {
       router.push("/login");
     }
+
+    setUser(JSON.parse(Cookie.get("user")));
+    console.log(user);
     const access_token = "Bearer " + Cookie.get("accesstoken");
     const headers = { authorization: access_token };
 
     axiosApiCall("", "get", headers, {})
       .then((res) => {
-        setlistClass(res.data.resValue.classrooms);
+        const allClassFromApi = res.data.resValue.classrooms;
+        setlistClass(allClassFromApi);
+        const classID_array = [];
+        allClassFromApi.map((classroom) => {
+          classID_array.push(classroom._id);
+        });
+        Cookie.set("classID_array", JSON.stringify(classID_array));
+        console.log("org");
+        console.log(classID_array);
+        console.log("json cookie");
+        console.log(JSON.parse(Cookie.get("classID_array")));
       })
       .catch(function (error) {
         if (error.response) {
@@ -73,7 +88,7 @@ export default function ClassRoomPage({ listClassTest }) {
         console.log("response:");
         console.log(res.data.resValue);
         const newClassList = JSON.parse(JSON.stringify(listClass));
-        newClassList.push(res.data.resValue);
+        newClassList.push(res.data.resValue.classroom);
         setlistClass(newClassList);
         console.log(newClassList);
       })
@@ -98,9 +113,14 @@ export default function ClassRoomPage({ listClassTest }) {
           <MenuBar> </MenuBar>{" "}
           <Grid container>
             {listClass.map((classRoom, index) => {
+              const isHosted = classRoom.host === user.email;
+              console.log(classRoom.host);
+              console.log(user.email);
               return (
                 <Grid item xs={3} key={index}>
-                  <ClassRoom classroom={classRoom}> </ClassRoom>{" "}
+                  <ClassRoom classroom={classRoom} isHosted={isHosted}>
+                    {" "}
+                  </ClassRoom>{" "}
                 </Grid>
               );
             })}
