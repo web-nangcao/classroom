@@ -48,7 +48,7 @@ export default function ClassroomDetailPage() {
 
   useEffect(() => {
     if (!Cookie.get("accesstoken")) {
-      Cookie.set("prePath", JSON.stringify(`/classroom/detail/${pid}`));
+      Cookie.set("prePath", `/classroom/detail/${pid}`);
       router.push("/login");
     }
     if (!pid) {
