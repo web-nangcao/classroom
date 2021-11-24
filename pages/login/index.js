@@ -44,7 +44,10 @@ export default function Login() {
         Cookie.set("user", JSON.stringify(res.data.user));
         Cookie.set("accesstoken", res.data.access_token);
 
-        router.push("/");
+        console.log("prepath: " + Cookie.get("prePath"));
+        Cookie.get("prePath")
+          ? router.push(Cookie.get("prePath"))
+          : router.push("/");
       })
       .catch(function (error) {
         if (error.response) {

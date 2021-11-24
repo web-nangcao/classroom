@@ -43,6 +43,8 @@ export default function ClassRoomPage({ listClassTest }) {
   const [listClass, setlistClass] = useState([]);
   useLayoutEffect(() => {
     if (!Cookie.get("accesstoken")) {
+      Cookie.set("prePath", "/classroom");
+
       router.push("/login");
     }
     const access_token = "Bearer " + Cookie.get("accesstoken");
@@ -50,7 +52,17 @@ export default function ClassRoomPage({ listClassTest }) {
 
     axiosApiCall("", "get", headers, {})
       .then((res) => {
-        setlistClass(res.data.resValue.classrooms);
+        const allClassFromApi = res.data.resValue.classrooms;
+        setlistClass(allClassFromApi);
+        const classID_array = [];
+        allClassFromApi.map((classroom) => {
+          classID_array.push(classroom._id);
+        });
+        Cookie.set("classID_array", JSON.stringify(classID_array));
+        console.log("org");
+        console.log(classID_array);
+        console.log("json cookie");
+        console.log(JSON.parse(Cookie.get("classID_array")));
       })
       .catch(function (error) {
         if (error.response) {
@@ -98,8 +110,6 @@ export default function ClassRoomPage({ listClassTest }) {
           <MenuBar> </MenuBar>{" "}
           <Grid container>
             {listClass.map((classRoom, index) => {
-              console.log("map function");
-              console.log(classRoom);
               return (
                 <Grid item xs={3} key={index}>
                   <ClassRoom classroom={classRoom}> </ClassRoom>{" "}

@@ -32,6 +32,7 @@ export default function ClassroomDetailPage({ classDetail }) {
     { personPost: classDetail.host },
     { personPost: classDetail.host },
   ];
+
   return (
     <Layout>
       <>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -17,6 +17,7 @@ import DrawerLeftSide from "./drawerLeftSide";
 import { styled } from "@mui/material/styles";
 
 import topBarClassDetailStyle from "./topBarClassDetail.module.css";
+import Cookie from "js-cookie";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -25,8 +26,9 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function topBarClassDetail() {
+export default function topBarClassDetail({ id }) {
   const [anchorAdd, setAnchorAdd] = useState(null);
+  const [classID, setClassID] = useState("");
 
   const isMenuOpen = Boolean(anchorAdd);
 
@@ -37,6 +39,11 @@ export default function topBarClassDetail() {
   const handleMenuClose = () => {
     setAnchorAdd(null);
   };
+
+  useEffect(() => {
+    const ID = JSON.parse(Cookie.get("classID"));
+    setClassID(ID);
+  });
   const menuId = "primary-search-account-menu";
   return (
     <Paper className={topBarClassDetailStyle.container}>
@@ -58,18 +65,18 @@ export default function topBarClassDetail() {
             </Link>
           </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <Link href="/classroom/detail">
-              <a>Stream</a>
+            <Link href={`/classroom/detail/${classID}`}>
+              <a>Tất Cả</a>
             </Link>
           </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <Link href="/classroom/detail">
-              <a>Class Work</a>
+            <Link href="">
+              <a>Bài Học</a>
             </Link>
           </Grid>
           <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/classroom/people">
-              <a>People</a>
+              <a>Người Tham Dự</a>
             </Link>
           </Grid>
           <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
