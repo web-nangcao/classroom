@@ -79,15 +79,7 @@ export default function Login() {
           </Avatar>{" "}
           <h2> Sign In </h2>{" "}
         </Grid>
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          style={btnstyle}
-          fullWidth
-        >
-          Sign in
-        </Button>
+        <Grid align="center">
         <GoogleLogin
           clientId={config.env.GOOGLE_CLIENT_ID}
           buttonText="Log in with Google"
@@ -95,6 +87,8 @@ export default function Login() {
           onFailure={handleLogin}
           cookiePolicy={"single_host_origin"}
         />{" "}
+        </Grid>
+       
       </Paper>{" "}
     </Grid>
   );
