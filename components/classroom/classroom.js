@@ -77,14 +77,14 @@ export default function ClassRoom({ classroom, isHosted }) {
           <CardActions className={ClassroomStyle.cardFooter}>
             <Button
               size="small"
-              onClick={() => copyToClipboard("teacher")}
+              onClick={() => copyToClipboard("Teacher")}
               variant="outlined"
             >
               Mời giáo viên
             </Button>
             <Button
               size="small"
-              onClick={() => copyToClipboard("student")}
+              onClick={() => copyToClipboard("Student")}
               variant="outlined"
             >
               Mời học sinh
