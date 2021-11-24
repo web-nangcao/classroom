@@ -34,7 +34,7 @@ export default function ClassRoomPage() {
     const studentListTemp = [];
     const teacherListTemp = [];
     classDetail.members.map((member) => {
-      if (member.userType === "Admin") {
+      if (member.userType === "Teacher") {
         teacherListTemp.push(member);
       } else {
         studentListTemp.push(member);

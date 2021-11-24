@@ -37,10 +37,11 @@ export default function Login() {
 
     console.log(response);
 
+    console.log("hello");
+
     axiosApiCall("auth/google-token", "post", { access_token })
       .then((res) => {
-        console.log(res);
-
+        console.log("hi");
         Cookie.set("user", JSON.stringify(res.data.user));
         Cookie.set("accesstoken", res.data.access_token);
 
@@ -50,6 +51,7 @@ export default function Login() {
           : router.push("/");
       })
       .catch(function (error) {
+        console.log(error);
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);

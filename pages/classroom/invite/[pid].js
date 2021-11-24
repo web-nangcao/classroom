@@ -31,30 +31,21 @@ export default function ClassroomDetailPage() {
   }, [userType]);
 
   const joinClassHandle = () => {
+    const data = { classroomId: classID, userType: userType };
     //goi api ve cho back end
-    //axiosApiCall(`get-class-detail/${pid}`, "get", headers, {});
-    //   .then((res) => {
-    //     const classDetailTemp = res.data.resValue.classroom;
-    //     console.log(classDetailTemp);
-    //     setClassDetail(classDetailTemp);
-    //     const listLessonTemp = [
-    //       { personPost: classDetailTemp.host },
-    //       { personPost: classDetailTemp.host },
-    //       { personPost: classDetailTemp.host },
-    //       { personPost: classDetailTemp.host },
-    //     ];
-    //     setListLesson(listLessonTemp);
-    //     setLoadingPage(false);
-    //     Cookie.set("classID", JSON.stringify(classDetailTemp._id));
-    //     Cookie.set("classDetail", JSON.stringify(classDetailTemp));
-    //   })
-    //   .catch(function (error) {
-    //     if (error.response) {
-    //       console.log(error.response.data);
-    //       console.log(error.response.status);
-    //       console.log(error.response.headers);
-    //     }
-    //   });
+    axiosApiCall(`join-class`, "post", headers, data)
+      .then((res) => {
+        const classDetailTemp = res.data.resValue.classroom;
+        Cookie.set("classID", JSON.stringify(classDetailTemp._id));
+        Cookie.set("classDetail", JSON.stringify(classDetailTemp));
+      })
+      .catch(function (error) {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
 
     router.push(`/classroom/detail/${classID}`);
   };

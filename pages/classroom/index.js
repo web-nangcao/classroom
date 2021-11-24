@@ -45,35 +45,44 @@ export default function ClassRoomPage({ listClassTest }) {
   useLayoutEffect(() => {
     Cookie.set("prePath", "/classroom");
     if (!Cookie.get("accesstoken")) {
+      console.log("ủa");
       router.push("/login");
-    }
+    } else {
+      console.log("Asf");
 
-    setUser(JSON.parse(Cookie.get("user")));
-    console.log(user);
-    const access_token = "Bearer " + Cookie.get("accesstoken");
-    const headers = { authorization: access_token };
+      Cookie.get("user") !== undefined ??
+        setUser(JSON.parse(Cookie.get("user")));
+      console.log(user);
+      const access_token = "Bearer " + Cookie.get("accesstoken");
+      const headers = { authorization: access_token };
 
-    axiosApiCall("", "get", headers, {})
-      .then((res) => {
-        const allClassFromApi = res.data.resValue.classrooms;
-        setlistClass(allClassFromApi);
-        const classID_array = [];
-        allClassFromApi.map((classroom) => {
-          classID_array.push(classroom._id);
+      axiosApiCall("", "get", headers, {})
+        .then((res) => {
+          if (res !== {}) {
+            const allClassFromApi = res.data.resValue.classrooms;
+            setlistClass(allClassFromApi);
+            const classID_array = [];
+            allClassFromApi.map((classroom) => {
+              classID_array.push(classroom._id);
+            });
+            Cookie.set("classID_array", JSON.stringify(classID_array));
+            console.log("org");
+            console.log(classID_array);
+            console.log("json cookie");
+            console.log(JSON.parse(Cookie.get("classID_array")));
+          } else {
+            console.log("khong nhan dc class lít");
+          }
+        })
+        .catch(function (error) {
+          console.log("erpr");
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
         });
-        Cookie.set("classID_array", JSON.stringify(classID_array));
-        console.log("org");
-        console.log(classID_array);
-        console.log("json cookie");
-        console.log(JSON.parse(Cookie.get("classID_array")));
-      })
-      .catch(function (error) {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
+    }
   }, []);
 
   const handleAddClass = (newClass) => {
