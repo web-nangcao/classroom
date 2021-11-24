@@ -15,9 +15,9 @@ export function checkaccessToken() {
         console.log("access token ", access_token)
         if (access_token === undefined) {
 
-            // useEffect(() => {
-            //     router.push('/login');
-            // }, []);
+            useEffect(() => {
+                router.push('/login');
+            }, []);
         }
         return false;
     }
