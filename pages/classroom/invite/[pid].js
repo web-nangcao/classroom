@@ -24,28 +24,20 @@ export default function ClassroomDetailPage() {
   const router = useRouter();
   const { userType, classID } = router.query;
 
+  const [type, setType] = useState("Student");
+
   useEffect(() => {
     if (!userType) {
       return;
     }
+    setType(userType);
   }, [userType]);
 
   const joinClassHandle = () => {
-    const data = { classroomId: classID, userType: userType };
-    //goi api ve cho back end
-    axiosApiCall(`join-class`, "post", headers, data)
-      .then((res) => {
-        const classDetailTemp = res.data.resValue.classroom;
-        Cookie.set("classID", JSON.stringify(classDetailTemp._id));
-        Cookie.set("classDetail", JSON.stringify(classDetailTemp));
-      })
-      .catch(function (error) {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
+    console.log(type);
+    console.log(classID);
+    const joinClass = { userType: type, classroomId: classID };
+    Cookie.set("joinClass", JSON.stringify(joinClass));
 
     router.push(`/classroom/detail/${classID}`);
   };

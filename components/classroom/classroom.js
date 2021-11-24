@@ -22,7 +22,7 @@ export default function ClassRoom({ classroom, isHosted }) {
   function copyToClipboard(value) {
     var tempInput = document.createElement("input");
     tempInput.style = "position: absolute; left: -1000px; top: -1000px";
-    tempInput.value = `localhost:3000/classroom/invite/${value}?classID=${classroom._id}`;
+    tempInput.value = `${process.env.NEXT_PUBLIC_FRONT_END}/classroom/invite/${value}?classID=${classroom._id}`;
     document.body.appendChild(tempInput);
     tempInput.select();
     document.execCommand("copy");
