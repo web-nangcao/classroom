@@ -14,7 +14,7 @@ import ClassroomStyle from "./classroom.module.css";
 
 export default function ClassRoom({ classroom }) {
   return (
-    <Link href="classroom/detail">
+    <Link href={`classroom/detail/${classroom._id}`}>
       <a>
         <Card
           sx={{ maxWidth: "380px" }}
