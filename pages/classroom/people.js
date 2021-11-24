@@ -27,14 +27,19 @@ import Cookie from "js-cookie";
 export default function ClassRoomPage() {
   const [studentList, setStudentList] = useState([]);
   const [teacherList, setTeacherList] = useState([]);
+  const [adminList, setAdminList] = useState([]);
   const [loadingPage, setLoadingPage] = useState(true);
 
   useEffect(() => {
     const classDetail = JSON.parse(Cookie.get("classDetail"));
     const studentListTemp = [];
     const teacherListTemp = [];
+    const adminListTemp = [];
     classDetail.members.map((member) => {
-      if (member.userType === "Teacher") {
+      if (member.userType === "Admin") {
+        adminListTemp.push(member);
+        teacherListTemp.push(member);
+      } else if (member.userType === "Teacher") {
         teacherListTemp.push(member);
       } else {
         studentListTemp.push(member);
@@ -42,6 +47,7 @@ export default function ClassRoomPage() {
     });
 
     setTeacherList(teacherListTemp);
+    setAdminList(adminListTemp);
     setStudentList(studentListTemp);
     setLoadingPage(false);
   });
@@ -59,11 +65,11 @@ export default function ClassRoomPage() {
             <div className={styles.classContentPeopleContainer}>
               <Grid container spacing={2}>
                 <Grid item xs={10}>
-                  <h1 style={{ color: "#1967D3" }}>Teachers</h1>
+                  <h1 style={{ color: "#1967D3" }}>Quản lý</h1>
                 </Grid>
                 <Grid item xs={2}>
                   <p className={peopleStyle.number}>
-                    {teacherList.length} teachers
+                    {teacherList.length} Quản lý
                   </p>
                 </Grid>
               </Grid>
@@ -81,11 +87,33 @@ export default function ClassRoomPage() {
               </List>
               <Grid container spacing={2}>
                 <Grid item xs={10}>
-                  <h1 style={{ color: "#1967D3" }}>Students</h1>
+                  <h1 style={{ color: "#1967D3" }}>Giáo viên</h1>
                 </Grid>
                 <Grid item xs={2}>
-                  <p className={peopleStyle.email}>
-                    {studentList.length} students
+                  <p className={peopleStyle.number}>
+                    {teacherList.length} Giáo viên
+                  </p>
+                </Grid>
+              </Grid>
+              <List>
+                {teacherList.map((teacher) => {
+                  return (
+                    <>
+                      <ListItem>
+                        <Person personName={teacher.email}></Person>
+                      </ListItem>
+                      <Divider />
+                    </>
+                  );
+                })}
+              </List>
+              <Grid container spacing={2}>
+                <Grid item xs={10}>
+                  <h1 style={{ color: "#1967D3" }}>Học sinh</h1>
+                </Grid>
+                <Grid item xs={2}>
+                  <p className={peopleStyle.number}>
+                    {studentList.length} Học sinh
                   </p>
                 </Grid>
               </Grid>

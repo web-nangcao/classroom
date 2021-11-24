@@ -54,7 +54,44 @@ export default function ClassroomDetailPage() {
     if (!pid) {
       return;
     }
+    console.log("check join class");
+    console.log(Cookie.get("joinClass"));
 
+    if (Cookie.get("joinClass") != undefined) {
+      console.log("json parse join class");
+      console.log(JSON.parse(Cookie.get("joinClass")));
+
+      axiosApiCall(
+        `join-class`,
+        "post",
+        headers,
+        JSON.parse(Cookie.get("joinClass"))
+      )
+        .then((res) => {
+          const classDetailTemp = res.data.resValue.classroom;
+          console.log(classDetailTemp);
+          setClassDetail(classDetailTemp);
+
+          const listLessonTemp = [
+            { personPost: classDetailTemp.host },
+            { personPost: classDetailTemp.host },
+            { personPost: classDetailTemp.host },
+            { personPost: classDetailTemp.host },
+          ];
+          setListLesson(listLessonTemp);
+          setLoadingPage(false);
+          Cookie.set("classID", JSON.stringify(classDetailTemp._id));
+          Cookie.set("classDetail", JSON.stringify(classDetailTemp));
+        })
+        .catch(function (error) {
+          console.log("lỗi rồi nè má");
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
+    }
     console.log(access_token);
     console.log(pid);
     axiosApiCall(`get-class-detail/${pid}`, "get", headers, {})

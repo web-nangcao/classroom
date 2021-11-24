@@ -50,9 +50,8 @@ export default function ClassRoomPage({ listClassTest }) {
     } else {
       console.log("Asf");
 
-      Cookie.get("user") !== undefined ??
-        setUser(JSON.parse(Cookie.get("user")));
-      console.log(user);
+      setUser(JSON.parse(Cookie.get("user")));
+
       const access_token = "Bearer " + Cookie.get("accesstoken");
       const headers = { authorization: access_token };
 
@@ -66,10 +65,6 @@ export default function ClassRoomPage({ listClassTest }) {
               classID_array.push(classroom._id);
             });
             Cookie.set("classID_array", JSON.stringify(classID_array));
-            console.log("org");
-            console.log(classID_array);
-            console.log("json cookie");
-            console.log(JSON.parse(Cookie.get("classID_array")));
           } else {
             console.log("khong nhan dc class lít");
           }
