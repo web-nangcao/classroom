@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -6,20 +6,38 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import Alert from "@mui/material/Alert";
 
 import Image from "next/image";
 import Link from "next/link";
 
 import ClassroomStyle from "./classroom.module.css";
 
-export default function ClassRoom({ classroom }) {
+import Expire from "./Expire";
+
+export default function ClassRoom({ classroom, isHosted }) {
+  const [alert, setAlert] = useState(false);
+  const textAreaRef = useRef(null);
+  let timer;
+  function copyToClipboard(value) {
+    var tempInput = document.createElement("input");
+    tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+    tempInput.value = `localhost:3000/classroom/invite/${value}?classID=${classroom._id}`;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    setAlert(true);
+    window.clearTimeout(timer);
+    timer = window.setTimeout(function () {
+      setAlert(false);
+    }, 1000);
+  }
+
   return (
-    <Link href="classroom/detail">
-      <a>
-        <Card
-          sx={{ maxWidth: "380px" }}
-          className={ClassroomStyle.cardClassroom}
-        >
+    <Card sx={{ maxWidth: "380px" }} className={ClassroomStyle.cardClassroom}>
+      <Link href={`classroom/detail/${classroom._id}`}>
+        <a>
           <CardMedia
             component="img"
             alt="green iguana"
@@ -51,12 +69,36 @@ export default function ClassRoom({ classroom }) {
               </Grid>
             </Grid>
           </CardContent>
+        </a>
+      </Link>
+      {isHosted ? (
+        <>
+          {" "}
           <CardActions className={ClassroomStyle.cardFooter}>
-            <Button size="small">Open your Work</Button>
-            <Button size="small">Open in new Tab</Button>
+            <Button
+              size="small"
+              onClick={() => copyToClipboard("teacher")}
+              variant="outlined"
+            >
+              Mời giáo viên
+            </Button>
+            <Button
+              size="small"
+              onClick={() => copyToClipboard("student")}
+              variant="outlined"
+            >
+              Mời học sinh
+            </Button>
           </CardActions>
-        </Card>
-      </a>
-    </Link>
+          {alert ? (
+            <div className={ClassroomStyle.alert}>Đã sao chép link</div>
+          ) : (
+            <></>
+          )}
+        </>
+      ) : (
+        <></>
+      )}
+    </Card>
   );
 }
