@@ -28,6 +28,7 @@ export default function Login() {
 
   const access_token = Cookie.get("accesstoken");
   console.log("access token ", access_token);
+  console.log("env - test" , config.env.GOOGLE_CLIENT_ID);
   if (access_token !== undefined) {
     router.push("/");
   }
