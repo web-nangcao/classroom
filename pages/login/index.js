@@ -45,6 +45,8 @@ export default function Login() {
         Cookie.set("user", JSON.stringify(res.data.user));
         Cookie.set("accesstoken", res.data.access_token);
 
+        console.log(res.data.access_token);
+
         console.log("prepath: " + Cookie.get("prePath"));
         Cookie.get("prePath")
           ? router.push(Cookie.get("prePath"))
@@ -77,7 +79,7 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>{" "}
           <h2> Sign In </h2>{" "}
-        </Grid>
+        </Grid>{" "}
         <Button
           type="submit"
           color="primary"
@@ -86,7 +88,7 @@ export default function Login() {
           fullWidth
         >
           Sign in
-        </Button>
+        </Button>{" "}
         <GoogleLogin
           clientId={config.env.GOOGLE_CLIENT_ID}
           buttonText="Log in with Google"

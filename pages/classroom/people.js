@@ -21,14 +21,52 @@ import peopleStyle from "../../styles/classroom.people.module.css";
 
 import libClassroom from "../../lib/classroom";
 
+import AddPeople from "../../components/classroom/people/addPeople";
+
 import { useState, useEffect } from "react";
 import Cookie from "js-cookie";
+import axios from "axios";
+
+const axiosApiCall = (url, method, headers = {}, data) =>
+  axios({
+    method,
+    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
+    data: data,
+    headers: headers,
+  });
 
 export default function ClassRoomPage() {
   const [studentList, setStudentList] = useState([]);
   const [teacherList, setTeacherList] = useState([]);
   const [adminList, setAdminList] = useState([]);
   const [loadingPage, setLoadingPage] = useState(true);
+
+  const handleAddPeolple = (newMember) => {
+    console.log("handle add people");
+    const access_token = "Bearer " + Cookie.get("accesstoken");
+    const headers = { authorization: access_token };
+    const classroomId = JSON.parse(Cookie.get("classDetail"))._id;
+    const data = {
+      classroomId: classroomId,
+      inviteEmail: newMember.txtEmail,
+      userType: newMember.txtUserType,
+    };
+    console.log(data);
+
+    axiosApiCall("invite-gmail", "post", headers, data)
+      .then((res) => {
+        console.log("response:");
+        console.log(res.data.resValue);
+      })
+      .catch(function (error) {
+        console.log("khoogn thể mời");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
 
   useEffect(() => {
     const classDetail = JSON.parse(Cookie.get("classDetail"));
@@ -50,7 +88,7 @@ export default function ClassRoomPage() {
     setAdminList(adminListTemp);
     setStudentList(studentListTemp);
     setLoadingPage(false);
-  });
+  }, []);
   return (
     <div>
       {!loadingPage ? (
@@ -62,7 +100,9 @@ export default function ClassRoomPage() {
               <link rel="icon" href="/favicon.ico" />
             </Head>
             <TopBarClassDetail></TopBarClassDetail>
+            <AddPeople handleAddPeolple={handleAddPeolple}></AddPeople>
             <div className={styles.classContentPeopleContainer}>
+              <h3>Mời người khác tham gia lớp học:</h3>
               <Grid container spacing={2}>
                 <Grid item xs={10}>
                   <h1 style={{ color: "#1967D3" }}>Quản lý</h1>
