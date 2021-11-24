@@ -41,12 +41,15 @@ export default function ClassRoomPage({ listClassTest }) {
   const router = useRouter();
 
   const [listClass, setlistClass] = useState([]);
+  const [user, setUser] = useState({});
   useLayoutEffect(() => {
+    Cookie.set("prePath", "/classroom");
     if (!Cookie.get("accesstoken")) {
-      Cookie.set("prePath", "/classroom");
-
       router.push("/login");
     }
+
+    setUser(JSON.parse(Cookie.get("user")));
+    console.log(user);
     const access_token = "Bearer " + Cookie.get("accesstoken");
     const headers = { authorization: access_token };
 
@@ -110,9 +113,14 @@ export default function ClassRoomPage({ listClassTest }) {
           <MenuBar> </MenuBar>{" "}
           <Grid container>
             {listClass.map((classRoom, index) => {
+              const isHosted = classRoom.host === user.email;
+              console.log(classRoom.host);
+              console.log(user.email);
               return (
                 <Grid item xs={3} key={index}>
-                  <ClassRoom classroom={classRoom}> </ClassRoom>{" "}
+                  <ClassRoom classroom={classRoom} isHosted={isHosted}>
+                    {" "}
+                  </ClassRoom>{" "}
                 </Grid>
               );
             })}

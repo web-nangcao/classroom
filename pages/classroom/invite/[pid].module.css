@@ -1,0 +1,17 @@
+.buttonWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.title {
+    margin-bottom: 100px;
+}
+
+.button {
+    width: 20%;
+    height: 10%;
+    margin: 20px;
+}
