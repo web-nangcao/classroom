@@ -73,10 +73,10 @@ export default function ClassroomDetailPage() {
           setClassDetail(classDetailTemp);
 
           const listLessonTemp = [
-            { personPost: classDetailTemp.host },
-            { personPost: classDetailTemp.host },
-            { personPost: classDetailTemp.host },
-            { personPost: classDetailTemp.host },
+            { id:1, personPost: classDetailTemp.host },
+            { id:2 , personPost: classDetailTemp.host },
+            { id:3 , personPost: classDetailTemp.host },
+            { id:4 , personPost: classDetailTemp.host },
           ];
           setListLesson(listLessonTemp);
           setLoadingPage(false);
@@ -107,6 +107,7 @@ export default function ClassroomDetailPage() {
           { personPost: classDetailTemp.host },
         ];
         setListLesson(listLessonTemp);
+        console.log(listLesson);
         setLoadingPage(false);
         Cookie.set("classID", JSON.stringify(classDetailTemp._id));
         Cookie.set("classDetail", JSON.stringify(classDetailTemp));
@@ -120,6 +121,7 @@ export default function ClassroomDetailPage() {
       });
   }, [pid]);
 
+  
   return (
     <div>
       {!loadingPage ? (
@@ -141,7 +143,7 @@ export default function ClassroomDetailPage() {
                 <Grid item xs={9}>
                   <Stack spacing={2}>
                     {listLesson.map((lesson) => {
-                      return <Lesson lesson={lesson}></Lesson>;
+                      return <Lesson key={lesson}   lesson={lesson}></Lesson>;
                     })}
                   </Stack>
                 </Grid>{" "}
