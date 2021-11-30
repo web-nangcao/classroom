@@ -30,7 +30,7 @@ import axios from "axios";
 const axiosApiCall = (url, method, headers = {}, data) =>
   axios({
     method,
-    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
+    url: `http://localhost:3000/${url}`,
     data: data,
     headers: headers,
   });
