@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd-next";
-import {useState} from "react"
+import { useState } from "react"
 import Button from "@mui/material/Grid";
-
+import TextField from '@mui/material/TextField';
 // fake data generator
 const getItems = count =>
   Array.from({ length: count }, (v, k) => k).map(k => ({
@@ -42,12 +42,43 @@ const getListStyle = isDraggingOver => ({
 });
 
 export default function Assignment() {
-  const [items, setItems] = useState(getItems(2));
+  const ref = React.createRef();
+  const [items, setItems] = useState([{
+    id: `item-${Math.random()}`,
+    name: '',
+    grade:'0',
+  }]);
 
-  
-  const createAssignment = (list, index, element) => {  
-    const items_m = items.push({id:1,}) 
-}
+
+  function createAssignment() {
+    let items_m = items.concat([{
+      id: `item-${Math.random()}`,
+      name: '',
+      grade:'0',
+    }])
+    setItems(items_m);
+
+  }
+  function removeAssignment (id)  {
+    let items_m = items
+    items_m = items_m.filter( (item,index) => item.id != id)
+    setItems(items_m);
+  }
+
+  function changeAssignmentName  (name,index)  {
+    let items_m = items
+    items_m[index].name = name;
+    console.log(items_m);
+    setItems(items_m);
+  } 
+
+  function changeAssignmentGrade  (grade,index)  {
+    let items_m = items
+    items_m[index].grade = grade;
+    console.log(items_m);
+    setItems(items_m);
+  }
+
   function onDragEnd(result) {
     // dropped outside the list
     if (!result.destination) {
@@ -59,12 +90,11 @@ export default function Assignment() {
       result.destination.index
     );
     setItems(items_m)
-    
   }
 
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
-  
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
@@ -86,16 +116,43 @@ export default function Assignment() {
                       provided.draggableProps.style
                     )}
                   >
-                    <input />
-                    <div>{item.content}</div>
-                    
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id=""
+                      label="Assignment"
+                      name="name"
+                      autoComplete="name"
+                      autoFocus
+                      // value={item.name}
+
+                      onChange={(e) =>changeAssignmentName(e.target.value,index)}
+                    />
+
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id=""
+                      label="grade"
+                      name="grade"
+                      
+                      autoComplete="grade"
+                      autoFocus
+                      // value={item.grade}
+                      onChange={(e) =>changeAssignmentGrade(e.target.value,index)}
+                      ref={ref}
+                    />
+                    <Button  onClick={() =>removeAssignment(item.id)}>delete</Button>
+                      {item.id}
                   </div>
                 )}
               </Draggable>
             ))}
             <Button variant="text" onClick={createAssignment}>text</Button>
           </div>
-          
+
         )}
       </Droppable>
     </DragDropContext>
