@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function topBarClassDetail({ id }) {
+export default function TopBarClassDetail({ id }) {
   const [anchorAdd, setAnchorAdd] = useState(null);
   const [classID, setClassID] = useState("");
 
