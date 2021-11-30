@@ -41,14 +41,12 @@ const getListStyle = isDraggingOver => ({
   width: 250
 });
 
-export default function assignment() {
+export default function Assignment() {
   const [items, setItems] = useState(getItems(2));
 
   
   const createAssignment = (list, index, element) => {  
-    const result = Array.from(list);  
-    result.splice(index, 0, element);  
-    return result  
+    const items_m = items.push({id:1,}) 
 }
   function onDragEnd(result) {
     // dropped outside the list
