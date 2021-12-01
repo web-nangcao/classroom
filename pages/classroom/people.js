@@ -69,20 +69,24 @@ export default function ClassRoomPage() {
   };
 
   useEffect(() => {
-    const classDetail = JSON.parse(Cookie.get("classDetail"));
     const studentListTemp = [];
     const teacherListTemp = [];
     const adminListTemp = [];
-    classDetail.members.map((member) => {
-      if (member.userType === "Admin") {
-        adminListTemp.push(member);
-        teacherListTemp.push(member);
-      } else if (member.userType === "Teacher") {
-        teacherListTemp.push(member);
-      } else {
-        studentListTemp.push(member);
-      }
-    });
+    console.log(Cookie.get("classDetail"));
+
+    if (Cookie.get("classDetail") !== undefined) {
+      const classDetail = JSON.parse(Cookie.get("classDetail"));
+      classDetail.members.map((member) => {
+        if (member.userType === "Admin") {
+          adminListTemp.push(member);
+          teacherListTemp.push(member);
+        } else if (member.userType === "Teacher") {
+          teacherListTemp.push(member);
+        } else {
+          studentListTemp.push(member);
+        }
+      });
+    }
 
     setTeacherList(teacherListTemp);
     setAdminList(adminListTemp);
@@ -162,7 +166,7 @@ export default function ClassRoomPage() {
                   return (
                     <>
                       <ListItem>
-                        <Person personName={student.personName}></Person>
+                        <Person personName={student.email}></Person>
                       </ListItem>
                       <Divider />
                     </>

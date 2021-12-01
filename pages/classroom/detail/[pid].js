@@ -15,6 +15,7 @@ import ClassRoom from "../../../components/classroom/classroom";
 import Lesson from "../../../components/classroom/detail/lesson";
 import Banner from "../../../components/classroom/detail/bannerClassDetail";
 import Upcoming from "../../../components/classroom/detail/upComingHomeWork";
+import Assignment from "../../../components/classroom/detail/AsssginmentScript";
 
 import libClassroom from "../../../lib/classroom";
 import axios from "axios";
@@ -43,6 +44,8 @@ export default function ClassroomDetailPage() {
   const headers = { authorization: access_token };
   const [classDetail, setClassDetail] = useState({});
   const [listLesson, setListLesson] = useState([]);
+
+  const assignments = [1, 2, 3, 4];
 
   const [loadingPage, setLoadingPage] = useState(true);
 
@@ -73,10 +76,10 @@ export default function ClassroomDetailPage() {
           setClassDetail(classDetailTemp);
 
           const listLessonTemp = [
-            { id:1, personPost: classDetailTemp.host },
-            { id:2 , personPost: classDetailTemp.host },
-            { id:3 , personPost: classDetailTemp.host },
-            { id:4 , personPost: classDetailTemp.host },
+            { id: 1, personPost: classDetailTemp.host },
+            { id: 2, personPost: classDetailTemp.host },
+            { id: 3, personPost: classDetailTemp.host },
+            { id: 4, personPost: classDetailTemp.host },
           ];
           setListLesson(listLessonTemp);
           setLoadingPage(false);
@@ -121,7 +124,6 @@ export default function ClassroomDetailPage() {
       });
   }, [pid]);
 
-  
   return (
     <div>
       {!loadingPage ? (
@@ -139,15 +141,18 @@ export default function ClassroomDetailPage() {
               <Grid container spacing={2}>
                 <Grid item xs={3}>
                   <Upcoming></Upcoming>
-                </Grid>{" "}
+                  <Assignment
+                    assignments={classDetail.assignments}
+                  ></Assignment>
+                </Grid>
                 <Grid item xs={9}>
                   <Stack spacing={2}>
-                    {listLesson.map((lesson) => {
-                      return <Lesson key={lesson}   lesson={lesson}></Lesson>;
+                    {listLesson.map((lesson, index) => {
+                      return <Lesson key={index} lesson={lesson}></Lesson>;
                     })}
                   </Stack>
-                </Grid>{" "}
-              </Grid>{" "}
+                </Grid>
+              </Grid>
             </div>
           </>
         </Layout>

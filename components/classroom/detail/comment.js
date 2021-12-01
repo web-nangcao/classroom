@@ -21,7 +21,7 @@ export default function Comment() {
           className={lessonStyle.image}
         />
       </Grid>
-      <Grid item xs={10} spacing={5}>
+      <Grid item xs={10}>
         <form>
           <Grid container>
             <Grid item xs={11.5}>

@@ -41,8 +41,10 @@ export default function TopBarClassDetail({ id }) {
   };
 
   useEffect(() => {
-    const ID = JSON.parse(Cookie.get("classID"));
-    setClassID(ID);
+    if (Cookie.get("classID") !== undefined) {
+      const ID = JSON.parse(Cookie.get("classID"));
+      setClassID(ID);
+    }
   });
   const menuId = "primary-search-account-menu";
   return (
@@ -65,14 +67,26 @@ export default function TopBarClassDetail({ id }) {
             </Link>
           </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <Link href={`/classroom/detail/${classID}`}>
-              <a>Tất Cả</a>
-            </Link>
+            {classID !== "" ? (
+              <Link href={`/classroom/detail/${classID}`}>
+                <a>Tất Cả</a>
+              </Link>
+            ) : (
+              <Link href={`/classroom`}>
+                <a>Tất Cả</a>
+              </Link>
+            )}
           </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <Link href="">
-              <a>Bài Học</a>
-            </Link>
+            {classID !== "" ? (
+              <Link href={`/classroom/assignment/${classID}`}>
+                <a>Bài Học</a>
+              </Link>
+            ) : (
+              <Link href={`/classroom`}>
+                <a>Bài Học</a>
+              </Link>
+            )}
           </Grid>
           <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/classroom/people">
