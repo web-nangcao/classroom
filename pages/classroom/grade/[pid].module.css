@@ -1,0 +1,9 @@
+.header {
+    background-color: coral !important;
+    border: 1px solid black;
+}
+
+.grade {
+    background-color: rgb(12, 171, 199) !important;
+    border: 1px solid black;
+}
