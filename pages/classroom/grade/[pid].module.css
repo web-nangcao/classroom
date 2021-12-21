@@ -1,9 +1,34 @@
 .header {
     background-color: coral !important;
-    border: 1px solid black;
+    border: 2px solid #cec5c5;
+    display: inline-block;
+    width: 220px;
+    height: 100px;
+}
+
+.headerName {
+    display: inline-block;
+    word-break: break-all;
+    width: 100px;
+    overflow: hidden;
+    height: 80px;
+    margin: 0 !important;
+}
+
+.moreOption {
+    display: inline-block;
+    width: 80px;
+    margin: 0 !important;
+    padding: 0;
 }
 
 .grade {
-    background-color: rgb(12, 171, 199) !important;
-    border: 1px solid black;
+    border: 2px solid #cec5c5;
+    display: inline-block;
+    width: 220px;
+}
+
+.gradeMaxText p {
+    font-weight: bold;
+    color: green;
 }

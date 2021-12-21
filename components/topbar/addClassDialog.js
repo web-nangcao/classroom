@@ -85,7 +85,6 @@ export default function AddClassDialog({ handleAddClass }) {
 export const FormWithHookForm = ({ handleAddClass }) => {
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
-    console.log("hello");
     handleAddClass(data);
   };
 

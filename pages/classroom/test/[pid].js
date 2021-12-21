@@ -22,14 +22,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import gradeStyle from "./[pid].module.css";
 
 const columns = [
-  {
-    id: "name",
-    label: "name",
-  },
-  {
-    id: "code",
-    label: "ISO\u00a0Code",
-  },
+  { id: "nameádfsdfsdfsfsfsdfsdfsfsdfsdfsdfsdf", label: "Name" },
+  { id: "coádfsdfsdfsdfsdfsfdadsfafsdasde", label: "ISO\u00a0Code" },
   {
     id: "population",
     label: "Population",
@@ -54,9 +48,9 @@ function createData(name, code, population, size) {
 }
 
 const rows = [
-  createData("11", "21", 17, 10),
-  createData("15", "20", 18, 96),
-  createData("14", "27", 60, 30),
+  createData("India", "IN", 124, 263),
+  createData("China", "CN", 14, 961),
+  createData("Italy", "IT", 60, 300),
 ];
 
 export default function StickyHeadTable() {
@@ -111,10 +105,9 @@ export default function StickyHeadTable() {
                           key={column.id}
                           className={gradeStyle.header}
                         >
-                          <span className={gradeStyle.headerName}>
-                            {column.label}
-                          </span>
-                          <span className={gradeStyle.moreOption}>
+                          {column.label}
+                          style={{ height: "auto !important" }}
+                          <span>
                             <Button
                               size="large"
                               aria-label="account of current user"
@@ -174,20 +167,14 @@ export default function StickyHeadTable() {
                                   className={gradeStyle.grade}
                                 >
                                   <OutlinedInput
-                                    type="number"
-                                    sx={{ m: 1, width: "130px" }}
+                                    sx={{ m: 1, width: "120px" }}
                                     id="outlined-adornment-weight"
                                     defaultValue={
                                       column.format && typeof value === "number"
                                         ? column.format(value)
                                         : value
                                     }
-                                    {...register(`${pos}`, {
-                                      max: {
-                                        value: 3,
-                                        message: "error message", // JS only: <p>error message</p> TS only support string
-                                      },
-                                    })}
+                                    {...register(`${pos}`)}
                                     onChange={onChange}
                                     endAdornment={
                                       <InputAdornment
