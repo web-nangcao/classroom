@@ -125,9 +125,11 @@ export default function Assignment() {
                       name="name"
                       autoComplete="name"
                       autoFocus
-                      // value={item.name}
+                      defaultValue={item.name}
 
                       onChange={(e) =>changeAssignmentName(e.target.value,index)}
+                      ref={ref}
+
                     />
 
                     <TextField
@@ -140,7 +142,7 @@ export default function Assignment() {
                       
                       autoComplete="grade"
                       autoFocus
-                      // value={item.grade}
+                      defaultValue={item.grade}
                       onChange={(e) =>changeAssignmentGrade(e.target.value,index)}
                       ref={ref}
                     />
