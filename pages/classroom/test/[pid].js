@@ -19,7 +19,7 @@ import Menu from "@mui/material/Menu";
 import { MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-import gradeStyle from "./[pid].module.css";
+// import gradeStyle from "./[pid].module.css";
 
 const columns = [
   { id: "nameádfsdfsdfsfsfsdfsdfsfsdfsdfsdfsdf", label: "Name" },
@@ -86,7 +86,7 @@ export default function StickyHeadTable() {
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <form>
+      {/* <form>
         <Controller
           name={"textValue"}
           control={control}
@@ -211,7 +211,7 @@ export default function StickyHeadTable() {
           )}
         />
         <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
-      </form>
+      </form> */}
     </Paper>
   );
 }
