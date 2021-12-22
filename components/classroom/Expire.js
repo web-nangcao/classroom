@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function Expire(props) {
+export default  function Expire(props) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -18,4 +18,3 @@ function Expire(props) {
   return isVisible ? <div>{props.children}</div> : <span />;
 }
 
-export default Expire;

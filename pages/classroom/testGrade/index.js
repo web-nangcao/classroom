@@ -85,15 +85,10 @@ export default function ClassAssignPage() {
             columns={columns}
             data={data}
             editable={{
-                onBulkUpdate: changes =>
+                onBulkUpdate: (changes) =>
                     new Promise((resolve, reject) => {
                         setTimeout(() => {
-                            resolve();
-                        }, 1000);
-                    }),
-                onRowDelete: oldData =>
-                    new Promise((resolve, reject) => {
-                        setTimeout(() => {
+                            console.log(changes)
                             resolve();
                         }, 1000);
                     }),
