@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 
 import Paper from "@mui/material/Paper";
@@ -20,54 +21,79 @@ import { MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import gradeStyle from "./[pid].module.css";
-
-const columns = [
-  {
-    id: "name",
-    label: "name",
-  },
-  {
-    id: "code",
-    label: "ISO\u00a0Code",
-  },
-  {
-    id: "population",
-    label: "Population",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "size",
-    label: "Size\u00a0(km\u00b2)",
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "density",
-    label: "Density",
-    format: (value) => value.toFixed(2),
-  },
-];
+import Cookie from "js-cookie";
 
 function createData(name, code, population, size) {
   const density = population;
   return { name, code, population, size, density };
 }
 
-const rows = [
-  createData("11", "21", 17, 10),
-  createData("15", "20", 18, 96),
-  createData("14", "27", 60, 30),
+const data = [
+  {
+    name: "duong boi long",
+    "giua ky": 100,
+    "cuoi ky": 25,
+    seminar: 100,
+    "bai tap": 100,
+  },
+  {
+    name: "Pham Tong Binh Minh",
+    "giua ky": 100,
+    "cuoi ky": 100,
+    seminar: 100,
+    "bai tap": 100,
+  },
+  {
+    name: "Vo The Minh",
+    "giua ky": 90,
+    "cuoi ky": 90,
+    seminar: 90,
+    "bai tap": 100,
+  },
+  {
+    name: "Boi Long",
+    "giua ky": 75,
+    "cuoi ky": 85,
+    seminar: 85,
+    "bai tap": 100,
+  },
+  {
+    name: "Binh Minh",
+    "giua ky": 100,
+    "cuoi ky": 85,
+    seminar: 90,
+    "bai tap": 100,
+  },
 ];
 
 export default function StickyHeadTable() {
+  const router = useRouter();
+  const { pid } = router.query;
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
     console.log("hello");
     console.log(data);
   };
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRow] = useState([]);
+  const [columns, setColumn] = useState([]);
+
+  useEffect(() => {
+    if (!Cookie.get("accesstoken")) {
+      Cookie.set("prePath", `/classroom/detail/${pid}`);
+      router.push("/login");
+    }
+    if (!pid) {
+      return;
+    }
+
+    let Col = Object.keys(data[0]);
+    //Col.push("Tong ket");
+    setColumn(Col);
+    setRow(data);
+  }, [pid]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -78,8 +104,15 @@ export default function StickyHeadTable() {
     setPage(0);
   };
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleChange = (event, pos) => {
+    console.log(event.currentTarget.value);
+    console.log(pos);
+
+    const position = pos.search("_");
+    const row = pos.substring(0, position);
+    const col = pos.substring(position + 1);
+    console.log(row);
+    console.log(col);
   };
 
   const handleMenu = (event) => {
@@ -104,50 +137,63 @@ export default function StickyHeadTable() {
                   aria-label="sticky table"
                   style={{ borderCollapse: "collapse" }}
                 >
-                  <TableHead>
+                  <TableHead className={gradeStyle.tableHead}>
                     <TableRow>
-                      {columns.map((column) => (
-                        <TableCell
-                          key={column.id}
-                          className={gradeStyle.header}
-                        >
-                          <span className={gradeStyle.headerName}>
-                            {column.label}
-                          </span>
-                          <span className={gradeStyle.moreOption}>
-                            <Button
-                              size="large"
-                              aria-label="account of current user"
-                              aria-controls="menu-appbar"
-                              aria-haspopup="true"
-                              onClick={handleMenu}
-                              color="inherit"
-                            >
-                              <ArrowDropDownIcon />
-                            </Button>
-                            <Menu
-                              id="menu-appbar"
-                              anchorEl={anchorEl}
-                              anchorOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                              }}
-                              keepMounted
-                              transformOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                              }}
-                              open={Boolean(anchorEl)}
-                              onClose={handleClose}
-                            >
-                              <MenuItem onClick={handleClose}>Profile</MenuItem>
-                              <MenuItem onClick={handleClose}>
-                                My account
-                              </MenuItem>
-                            </Menu>
-                          </span>
-                        </TableCell>
-                      ))}
+                      {columns.map((column, posCol) =>
+                        posCol == 0 ? (
+                          <TableCell
+                            key={posCol}
+                            className={gradeStyle.headerName}
+                          >
+                            <span className={gradeStyle.headerLabel}>
+                              {column}
+                            </span>
+                          </TableCell>
+                        ) : (
+                          <TableCell key={posCol} className={gradeStyle.header}>
+                            <span className={gradeStyle.headerLabel}>
+                              {column}
+                            </span>
+                            <span className={gradeStyle.moreOption}>
+                              <Button
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleMenu}
+                                color="inherit"
+                              >
+                                <ArrowDropDownIcon />
+                              </Button>
+                              <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                  vertical: "top",
+                                  horizontal: "right",
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                  vertical: "top",
+                                  horizontal: "right",
+                                }}
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                              >
+                                <MenuItem onClick={handleClose}>
+                                  Công bố điểm
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                  Export file
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                  Import file
+                                </MenuItem>
+                              </Menu>
+                            </span>
+                          </TableCell>
+                        )
+                      )}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -162,33 +208,34 @@ export default function StickyHeadTable() {
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={row.code}
+                            key={posRow}
                             style={{ height: "auto !important" }}
                           >
                             {columns.map((column, posCol) => {
-                              const value = row[column.id];
+                              const value = row[column];
                               const pos = posRow + "_" + posCol;
-                              return (
+
+                              return posCol == 0 ? (
                                 <TableCell
-                                  key={column.id}
+                                  key={pos}
+                                  className={gradeStyle.name}
+                                  sx={{ m: 1, width: "150px" }}
+                                >
+                                  {value}
+                                </TableCell>
+                              ) : (
+                                <TableCell
+                                  key={pos}
                                   className={gradeStyle.grade}
                                 >
                                   <OutlinedInput
                                     type="number"
                                     sx={{ m: 1, width: "130px" }}
                                     id="outlined-adornment-weight"
-                                    defaultValue={
-                                      column.format && typeof value === "number"
-                                        ? column.format(value)
-                                        : value
-                                    }
-                                    {...register(`${pos}`, {
-                                      max: {
-                                        value: 3,
-                                        message: "error message", // JS only: <p>error message</p> TS only support string
-                                      },
-                                    })}
-                                    onChange={onChange}
+                                    defaultValue={value}
+                                    {...register(`${pos}`)}
+                                    //onChange={onChange}
+                                    onChange={(e) => handleChange(e, pos)}
                                     endAdornment={
                                       <InputAdornment
                                         position="end"
@@ -223,7 +270,20 @@ export default function StickyHeadTable() {
             </>
           )}
         />
-        <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleSubmit(onSubmit)}
+          className={gradeStyle.button}
+        >
+          Lưu điểm
+        </Button>
+        <Button variant="contained" color="error" className={gradeStyle.button}>
+          Export File
+        </Button>
+        <Button variant="contained" className={gradeStyle.button}>
+          Import File
+        </Button>
       </form>
     </Paper>
   );

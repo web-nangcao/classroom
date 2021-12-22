@@ -2,22 +2,35 @@
     background-color: coral !important;
     border: 2px solid #cec5c5;
     display: inline-block;
-    width: 220px;
-    height: 100px;
+    width: 180px;
+    height: 80px;
+    padding: 5px !important;
+}
+
+.tableHead {
+    padding: 0 !important;
 }
 
 .headerName {
+    background-color: coral !important;
+    border: 2px solid #cec5c5;
+    display: inline-block;
+    width: 220px;
+    height: 80px;
+}
+
+.headerLabel {
     display: inline-block;
     word-break: break-all;
     width: 100px;
     overflow: hidden;
     height: 80px;
-    margin: 0 !important;
+    padding: 0;
 }
 
 .moreOption {
     display: inline-block;
-    width: 80px;
+    width: 0px;
     margin: 0 !important;
     padding: 0;
 }
@@ -25,10 +38,24 @@
 .grade {
     border: 2px solid #cec5c5;
     display: inline-block;
+    width: 180px;
+    height: 120px;
+    margin: 0;
+}
+
+.name {
+    border: 2px solid #cec5c5;
+    display: inline-block;
     width: 220px;
+    height: 120px;
+    margin: 0;
 }
 
 .gradeMaxText p {
     font-weight: bold;
     color: green;
+}
+
+.button {
+    margin: 50px;
 }
