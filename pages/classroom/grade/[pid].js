@@ -23,6 +23,16 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import gradeStyle from "./[pid].module.css";
 import Cookie from "js-cookie";
 
+import axios from "axios";
+
+const axiosApiCall = (url, method, headers = {}, data) =>
+  axios({
+    method,
+    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
+    data: data,
+    headers: headers,
+  });
+
 function createData(name, code, population, size) {
   const density = population;
   return { name, code, population, size, density };
@@ -69,10 +79,31 @@ const data = [
 export default function StickyHeadTable() {
   const router = useRouter();
   const { pid } = router.query;
+
+  const access_token = "Bearer " + Cookie.get("accesstoken");
+  const headers = { authorization: access_token };
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
     console.log("hello");
     console.log(data);
+    axiosApiCall(
+      `classroom-grade/download-student-list-template/61e3ce15876a79e98d85769e`,
+      "get",
+      headers,
+      []
+    )
+      .then((res) => {
+        console.log("classroom-grade/download-student-list-template");
+        console.log(res.data.resValue);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
   };
   const [anchorEl, setAnchorEl] = useState(null);
   const [page, setPage] = useState(0);
@@ -88,6 +119,24 @@ export default function StickyHeadTable() {
     if (!pid) {
       return;
     }
+
+    axiosApiCall(
+      `classroom-grade/classroom-grade-detail/${pid}`,
+      "get",
+      headers,
+      []
+    )
+      .then((res) => {
+        console.log(res.data.resValue);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
 
     let Col = Object.keys(data[0]);
     //Col.push("Tong ket");

@@ -33,7 +33,7 @@ export default function ClassroomDetailPage() {
   //classDetail = { host: "DuongBoiLong", className: "ABCxyz" };
   const router = useRouter();
   const { pid } = router.query;
-  console.log("pid: " + pid);
+  //console.log("pid: " + pid);
   //   const listLesson = [
   //     { personPost: classDetail.host },
   //     { personPost: classDetail.host },
@@ -50,6 +50,7 @@ export default function ClassroomDetailPage() {
   const [loadingPage, setLoadingPage] = useState(true);
 
   useEffect(() => {
+    //console.log("hello");
     if (!Cookie.get("accesstoken")) {
       Cookie.set("prePath", `/classroom/detail/${pid}`);
       router.push("/login");
@@ -57,12 +58,12 @@ export default function ClassroomDetailPage() {
     if (!pid) {
       return;
     }
-    console.log("check join class");
-    console.log(Cookie.get("joinClass"));
+    //console.log("check join class");
+    // console.log(Cookie.get("joinClass"));
 
     if (Cookie.get("joinClass") != undefined) {
-      console.log("json parse join class");
-      console.log(JSON.parse(Cookie.get("joinClass")));
+      //console.log("json parse join class");
+      //console.log(JSON.parse(Cookie.get("joinClass")));
 
       axiosApiCall(
         `join-class`,
@@ -72,7 +73,8 @@ export default function ClassroomDetailPage() {
       )
         .then((res) => {
           const classDetailTemp = res.data.resValue.classroom;
-          console.log(classDetailTemp);
+          console.log("assignment");
+          console.log(classDetailTemp.assignments);
           setClassDetail(classDetailTemp);
 
           const listLessonTemp = [
@@ -95,12 +97,13 @@ export default function ClassroomDetailPage() {
           }
         });
     }
-    console.log(access_token);
-    console.log(pid);
+    //console.log(access_token);
+    //console.log(pid);
     axiosApiCall(`get-class-detail/${pid}`, "get", headers, {})
       .then((res) => {
         const classDetailTemp = res.data.resValue.classroom;
-        console.log(classDetailTemp);
+        console.log("assignment");
+        console.log(classDetailTemp.assignments);
         setClassDetail(classDetailTemp);
 
         const listLessonTemp = [
@@ -110,7 +113,7 @@ export default function ClassroomDetailPage() {
           { personPost: classDetailTemp.host },
         ];
         setListLesson(listLessonTemp);
-        console.log(listLesson);
+        //console.log(listLesson);
         setLoadingPage(false);
         Cookie.set("classID", JSON.stringify(classDetailTemp._id));
         Cookie.set("classDetail", JSON.stringify(classDetailTemp));

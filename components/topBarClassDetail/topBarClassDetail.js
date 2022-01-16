@@ -88,9 +88,14 @@ export default function TopBarClassDetail({ id }) {
               </Link>
             )}
           </Grid>
-          <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
+          <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/classroom/people">
-              <a>Người Tham Dự</a>
+              <a>Người tham dự</a>
+            </Link>
+          </Grid>
+          <Grid item xs={3} className={topBarClassDetailStyle.topBarItem}>
+            <Link href={`/classroom/grade/${classID}`}>
+              <a>Điểm số</a>
             </Link>
           </Grid>
           <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>

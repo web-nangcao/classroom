@@ -204,6 +204,7 @@ export default function ClassAssignPage() {
           //const list_assigments = res.data.resValue.assignemt;
           //setItems(list_assigments);
           console.log("thanhcong");
+          console.log(res);
           setWarning(false);
           setSuccess(true);
         })

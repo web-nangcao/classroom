@@ -66,11 +66,11 @@ export default function ClassRoomPage({ listClassTest }) {
             });
             Cookie.set("classID_array", JSON.stringify(classID_array));
           } else {
-            console.log("khong nhan dc class lít");
+            //console.log("khong nhan dc class lít");
           }
         })
         .catch(function (error) {
-          console.log("erpr");
+          //console.log("erpr");
           if (error.response) {
             console.log(error.response.data);
             console.log(error.response.status);
@@ -81,7 +81,7 @@ export default function ClassRoomPage({ listClassTest }) {
   }, []);
 
   const handleAddClass = (newClass) => {
-    console.log(newClass);
+    //console.log(newClass);
     const access_token = "Bearer " + Cookie.get("accesstoken");
     const headers = { authorization: access_token };
 
@@ -90,11 +90,11 @@ export default function ClassRoomPage({ listClassTest }) {
     axiosApiCall("create", "post", headers, data)
       .then((res) => {
         console.log("response:");
-        console.log(res.data.resValue);
+        //console.log(res.data.resValue);
         const newClassList = JSON.parse(JSON.stringify(listClass));
         newClassList.push(res.data.resValue.classroom);
         setlistClass(newClassList);
-        console.log(newClassList);
+        //console.log(newClassList);
       })
       .catch(function (error) {
         if (error.response) {
@@ -118,8 +118,8 @@ export default function ClassRoomPage({ listClassTest }) {
           <Grid container>
             {listClass.map((classRoom, index) => {
               const isHosted = classRoom.host === user.email;
-              console.log(classRoom.host);
-              console.log(user.email);
+              //console.log(classRoom.host);
+              ///console.log(user.email);
               return (
                 <Grid item xs={3} key={index}>
                   <ClassRoom classroom={classRoom} isHosted={isHosted}>
