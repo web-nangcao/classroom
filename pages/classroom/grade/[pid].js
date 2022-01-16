@@ -19,7 +19,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import { MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
+import Link from "next/link";
 import gradeStyle from "./[pid].module.css";
 import Cookie from "js-cookie";
 
@@ -38,50 +38,13 @@ function createData(name, code, population, size) {
   return { name, code, population, size, density };
 }
 
-const data = [
-  {
-    name: "duong boi long",
-    "giua ky": 100,
-    "cuoi ky": 25,
-    seminar: 100,
-    "bai tap": 100,
-  },
-  {
-    name: "Pham Tong Binh Minh",
-    "giua ky": 100,
-    "cuoi ky": 100,
-    seminar: 100,
-    "bai tap": 100,
-  },
-  {
-    name: "Vo The Minh",
-    "giua ky": 90,
-    "cuoi ky": 90,
-    seminar: 90,
-    "bai tap": 100,
-  },
-  {
-    name: "Boi Long",
-    "giua ky": 75,
-    "cuoi ky": 85,
-    seminar: 85,
-    "bai tap": 100,
-  },
-  {
-    name: "Binh Minh",
-    "giua ky": 100,
-    "cuoi ky": 85,
-    seminar: 90,
-    "bai tap": 100,
-  },
-];
-
 export default function StickyHeadTable() {
   const router = useRouter();
   const { pid } = router.query;
 
   const access_token = "Bearer " + Cookie.get("accesstoken");
   const headers = { authorization: access_token };
+  const studentInfor = ["Họ và Tên: ", "MSSV: "];
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
     console.log("hello");
@@ -128,6 +91,22 @@ export default function StickyHeadTable() {
     )
       .then((res) => {
         console.log(res.data.resValue);
+        let tempCol = ["name", "code"];
+        const tempAssignment = res.data.resValue.assignments;
+        console.log(tempAssignment);
+        tempAssignment.forEach((assignment) => {
+          tempCol.push(assignment.name);
+        });
+        setColumn(tempCol);
+
+        const tempRow = [];
+        const tempGrade = res.data.resValue.grades;
+        console.log(tempGrade);
+        tempGrade.forEach((grade) => {
+          tempRow.push(grade);
+        });
+        setRow(tempRow);
+        console.log(rows);
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -137,11 +116,6 @@ export default function StickyHeadTable() {
           console.log(error.response.headers);
         }
       });
-
-    let Col = Object.keys(data[0]);
-    //Col.push("Tong ket");
-    setColumn(Col);
-    setRow(data);
   }, [pid]);
 
   const handleChangePage = (event, newPage) => {
@@ -172,6 +146,27 @@ export default function StickyHeadTable() {
     setAnchorEl(null);
   };
 
+  const downloadTemplate = () => {
+    axiosApiCall(
+      `classroom-grade/download-student-list-template/${pid}`,
+      "get",
+      headers,
+      []
+    )
+      .then((res) => {
+        console.log("classroom-grade/download-student-list-template");
+        console.log(res.data.resValue);
+        window.open(res.data.resValue.url);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <form>
@@ -189,13 +184,13 @@ export default function StickyHeadTable() {
                   <TableHead className={gradeStyle.tableHead}>
                     <TableRow>
                       {columns.map((column, posCol) =>
-                        posCol == 0 ? (
+                        posCol == 0 || posCol == 1 ? (
                           <TableCell
                             key={posCol}
                             className={gradeStyle.headerName}
                           >
                             <span className={gradeStyle.headerLabel}>
-                              {column}
+                              {studentInfor[posCol]}
                             </span>
                           </TableCell>
                         ) : (
@@ -264,7 +259,7 @@ export default function StickyHeadTable() {
                               const value = row[column];
                               const pos = posRow + "_" + posCol;
 
-                              return posCol == 0 ? (
+                              return posCol == 0 || posCol == 1 ? (
                                 <TableCell
                                   key={pos}
                                   className={gradeStyle.name}
@@ -326,6 +321,14 @@ export default function StickyHeadTable() {
           className={gradeStyle.button}
         >
           Lưu điểm
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={gradeStyle.button}
+          onClick={downloadTemplate}
+        >
+          Download Template
         </Button>
         <Button variant="contained" color="error" className={gradeStyle.button}>
           Export File

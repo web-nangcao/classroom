@@ -16,16 +16,16 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Cookie from "js-cookie";
 import config from "../../next.config";
-import Box from '@mui/material/Box';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Box from "@mui/material/Box";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 const axiosApiCall = (url, method, body = {}) =>
   axios({
     method,
-    // url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
+    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
 
     // test
-    url: `http://localhost:3000/api/register`,
+    //url: `http://localhost:2000/api/register`,
     data: body,
   });
 
@@ -56,7 +56,7 @@ export default function Login() {
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
 
-    let check = validate(data.get('email'), data.get('password'));
+    let check = validate(data.get("email"), data.get("password"));
 
     if (check === true) {
       axiosApiCall("auth/google-token", "post", { access_token })
@@ -98,7 +98,6 @@ export default function Login() {
 
     axiosApiCall("auth/google-token", "post", { access_token })
       .then((res) => {
-
         Cookie.set("user", JSON.stringify(res.data.user));
         Cookie.set("accesstoken", res.data.access_token);
 
@@ -121,39 +120,34 @@ export default function Login() {
 
   const handleRegister = () => {
     router.push("/register");
-  }
+  };
   const handleForgotPassword = () => {
     router.push("/forgotpassword");
-
-  }
+  };
 
   const validate = (v_email, v_password) => {
-
     let error_email = "";
     let error_password = "";
 
-
-
-    if (!(/$^|.+@.+..+/).test(v_email) || v_email == "") {
-      error_email = "Wrong email format"
+    if (!/$^|.+@.+..+/.test(v_email) || v_email == "") {
+      error_email = "Wrong email format";
     }
 
     if (v_password.length < 6 || v_password.length > 10) {
-      error_password = "Name should be 6 to 10 characters."
+      error_password = "Name should be 6 to 10 characters.";
     }
 
     setErrors({
       email: error_email,
       password: error_password,
-    })
+    });
 
     if (error_email != "" || error_password != "") {
       return false;
     } else {
       return true;
     }
-
-  }
+  };
   const paperStyle = {
     padding: 20,
     width: 350,
@@ -172,7 +166,12 @@ export default function Login() {
           <h2> Sign In </h2>{" "}
         </Grid>
         <Grid align="center">
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -184,7 +183,7 @@ export default function Login() {
               autoFocus
               defaultValue={forms.email}
               error={errors.email != ""}
-              helperText={errors.email != "" ? errors.email : ' '}
+              helperText={errors.email != "" ? errors.email : " "}
             />
             <TextField
               margin="normal"
@@ -197,11 +196,13 @@ export default function Login() {
               autoComplete="current-password"
               defaultValue={forms.password}
               error={errors.password != ""}
-              helperText={errors.password != "" ? errors.password : ' '}
+              helperText={errors.password != "" ? errors.password : " "}
             />
-            {error != "" &&
-              <Alert sx={{ mb: 2 }} severity="error">{error}</Alert>
-            }
+            {error != "" && (
+              <Alert sx={{ mb: 2 }} severity="error">
+                {error}
+              </Alert>
+            )}
             <Button
               type="submit"
               fullWidth
@@ -223,20 +224,20 @@ export default function Login() {
               container
               direction="column"
               alignItems="center"
-              justifyContent="center">
-              <Grid item >
+              justifyContent="center"
+            >
+              <Grid item>
                 <Link onClick={handleForgotPassword} variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
-              <Grid item >
+              <Grid item>
                 <Link onClick={handleRegister} variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
-
         </Grid>
       </Paper>{" "}
     </Grid>
