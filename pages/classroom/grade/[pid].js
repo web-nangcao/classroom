@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 
@@ -19,6 +19,8 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import { MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
+import FileData from "../../../components/classroom/Grade/fileData";
 
 import TopBarClassDetail from "../../../components/topBarClassDetail/topBarClassDetail";
 
@@ -42,6 +44,9 @@ function createData(name, code, population, size) {
 }
 
 export default function StickyHeadTable() {
+  const [selectedFile, setSelectedFile] = useState([]);
+  const [files, setfiles] = useState([]);
+
   const router = useRouter();
   const { pid } = router.query;
 
@@ -94,27 +99,8 @@ export default function StickyHeadTable() {
     )
       .then((res) => {
         console.log(res.data.resValue);
-        let tempCol = [
-          { key: "name", id: "" },
-          { key: "code", id: "" },
-        ];
-        const tempAssignment = res.data.resValue.assignments;
-        console.log(tempAssignment);
-        tempAssignment.forEach((assignment) => {
-          let temp = { key: `${assignment.name}`, id: `${assignment._id}` };
-          console.log(temp);
-          tempCol.push(temp);
-        });
-        setColumn(tempCol);
 
-        const tempRow = [];
-        const tempGrade = res.data.resValue.grades;
-        console.log(tempGrade);
-        tempGrade.forEach((grade) => {
-          tempRow.push(grade);
-        });
-        setRow(tempRow);
-        console.log(rows);
+        updateData(res);
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -218,6 +204,93 @@ export default function StickyHeadTable() {
         }
       });
   };
+
+  const importStudent = () => {
+    const formData = new FormData();
+
+    // Update the formData object
+    formData.append("file", selectedFile, selectedFile.name);
+
+    // Request made to the backend api
+    // Send formData object
+    axiosApiCall(
+      `classroom-grade/upload-student-list/${pid}`,
+      "post",
+      headers,
+      formData
+    )
+      .then((res) => {
+        console.log("tra ve");
+        console.log(res.data.resValue);
+        updateData(res);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
+  const importGradeBoard = () => {
+    const formData = new FormData();
+
+    // Update the formData object
+    formData.append("file", selectedFile, selectedFile.name);
+
+    // Request made to the backend api
+    // Send formData object
+    axiosApiCall(
+      `classroom-grade/upload-student-grade-board/${pid}`,
+      "post",
+      headers,
+      formData
+    )
+      .then((res) => {
+        console.log("tra ve");
+        console.log(res.data.resValue);
+        const tempRow = [];
+        const tempGrade = res.data.resValue;
+        updateData(res);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
+  function onFileChange(event) {
+    // Update the state
+    setSelectedFile(event.target.files[0]);
+    console.log(event.target.files[0]);
+  }
+
+  const updateData = (res) => {
+    console.log("hello", res.data.resValue);
+    let tempCol = [
+      { key: "name", id: "" },
+      { key: "code", id: "" },
+    ];
+    const tempAssignment = res.data.resValue.assignments;
+    tempAssignment.forEach((assignment) => {
+      let temp = { key: `${assignment.name}`, id: `${assignment._id}` };
+      tempCol.push(temp);
+    });
+    setColumn(tempCol);
+
+    const tempRow = [];
+    const tempGrade = res.data.resValue.grades;
+    tempGrade.forEach((grade) => {
+      tempRow.push(grade);
+    });
+    setRow(tempRow);
+    console.log("row ne", rows);
+  };
+
   return (
     <>
       <TopBarClassDetail></TopBarClassDetail>
@@ -375,35 +448,53 @@ export default function StickyHeadTable() {
                 </div>
               )}
             />
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleSubmit(onSubmit)}
-              className={gradeStyle.button}
-            >
-              Lưu điểm
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              className={gradeStyle.button}
-              onClick={downloadTemplate}
-            >
-              Download Template
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              className={gradeStyle.button}
-              onClick={downloadGradeBoard}
-            >
-              Export GradeBoard
-            </Button>
-            <Button variant="contained" className={gradeStyle.button}>
-              Import File
-            </Button>
           </form>
         </Paper>
+      </div>
+      <div>
+        <input type="file" onChange={onFileChange} />
+      </div>
+      <FileData selectedFile={selectedFile} />
+      <div>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleSubmit(onSubmit)}
+          className={gradeStyle.button}
+        >
+          Lưu điểm
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={gradeStyle.button}
+          onClick={downloadTemplate}
+        >
+          Download Template
+        </Button>
+        <Button
+          variant="contained"
+          className={gradeStyle.button}
+          onClick={importStudent}
+        >
+          Import Sinh Viên
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          className={gradeStyle.button}
+          onClick={downloadGradeBoard}
+        >
+          Export Bảng Điểm
+        </Button>
+        <Button
+          variant="contained"
+          color="warning"
+          className={gradeStyle.button}
+          onClick={importGradeBoard}
+        >
+          Import Bảng Điểm
+        </Button>
       </div>
     </>
   );

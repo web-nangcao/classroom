@@ -2,3 +2,9 @@
     display: flex;
     justify-content: center;
 }
+
+.image {
+    border-radius: 50%;
+    display: block;
+    padding: 50px;
+}
