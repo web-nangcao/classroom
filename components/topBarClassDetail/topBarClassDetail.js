@@ -59,7 +59,7 @@ export default function TopBarClassDetail({ id }) {
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
             <DrawerLeftSide> </DrawerLeftSide>
           </Grid>
-          <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
+          <Grid item xs={3} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/classroom">
               <a className={topBarClassDetailStyle.ClassVipPro}>
                 Class Vip Pro
@@ -89,15 +89,16 @@ export default function TopBarClassDetail({ id }) {
             )}
           </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <Link href="/classroom/people">
-              <a>Người tham dự</a>
-            </Link>
-          </Grid>
-          <Grid item xs={3} className={topBarClassDetailStyle.topBarItem}>
             <Link href={`/classroom/grade/${classID}`}>
               <a>Điểm số</a>
             </Link>
           </Grid>
+          <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
+            <Link href="/classroom/people">
+              <a>Người tham dự</a>
+            </Link>
+          </Grid>
+
           <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
             <DialpadIcon> </DialpadIcon>
           </Grid>
