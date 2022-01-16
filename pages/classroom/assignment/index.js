@@ -4,6 +4,9 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd-next"
 import { useState } from "react"
 import Button from "@mui/material/Grid";
 import TextField from '@mui/material/TextField';
+
+import { useForm } from "react-hook-form";
+
 // fake data generator
 const getItems = count =>
   Array.from({ length: count }, (v, k) => k).map(k => ({

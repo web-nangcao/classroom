@@ -2,7 +2,7 @@
     "name": "web-nangcao-classroom",
     "private": true,
     "scripts": {
-        "dev": "next dev -p 2000",
+        "dev": "next dev -p 3000",
         "build": "next build",
         "start": "next start -p $PORT",
         "heroku-postbuild": "npm run build",
@@ -25,7 +25,8 @@
         "react-beautiful-dnd-next": "^11.0.5",
         "react-dom": "17.0.2",
         "react-google-login": "^5.2.2",
-        "react-hook-form": "^7.20.1",
+        "react-hook-form": "^7.24.0",
+        "react-material-ui-form-validator": "^3.0.0",
         "rxjs": "^7.4.0"
     },
     "devDependencies": {
