@@ -126,7 +126,8 @@ export default function ClassAssignPage() {
             point: item.point,
             email: item.email,
             classroomId: pid,
-            _id: `item-${Math.random()}`,
+            _id: item._id,
+            id: item._id,
           };
           list_assigments.push(temp_assignment);
           console.log(list_assigments);
@@ -148,16 +149,17 @@ export default function ClassAssignPage() {
     setSuccess(false);
     let items_m = items.concat([
       {
-        _id: `item-${Math.random()}`,
+        id: `item-${Math.random()}`,
         name: "",
         point: "0",
+        _id: null,
       },
     ]);
     setItems(items_m);
   }
-  function removeAssignment(_id) {
+  function removeAssignment(id) {
     let items_m = items;
-    items_m = items_m.filter((item, index) => item._id != _id);
+    items_m = items_m.filter((item, index) => item.id != id);
     setItems(items_m);
   }
 
@@ -193,6 +195,7 @@ export default function ClassAssignPage() {
           point: item.point,
           email: email,
           classroomId: pid,
+          _id: item._id,
         };
         assignments.push(temp_assignment);
       });
@@ -205,6 +208,25 @@ export default function ClassAssignPage() {
           //setItems(list_assigments);
           console.log("thanhcong");
           console.log(res);
+          const list_assigments = [];
+          console.log("respone", res.data);
+          console.log("assginment", res.data.assignments);
+
+          const returnedAssignment = res.data.assignments;
+
+          returnedAssignment.map((item, pos) => {
+            let temp_assignment = {
+              name: items[pos].name,
+              point: items[pos].point,
+              email: items[pos].email,
+              classroomId: pid,
+              _id: item,
+              id: item,
+            };
+            list_assigments.push(temp_assignment);
+            console.log(list_assigments);
+          });
+          setItems(list_assigments);
           setWarning(false);
           setSuccess(true);
         })
@@ -253,7 +275,7 @@ export default function ClassAssignPage() {
               className={assignStyle.wrapperAssignment}
             >
               {items.map((item, index) => (
-                <Draggable key={item._id} draggableId={item._id} index={index}>
+                <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -296,7 +318,7 @@ export default function ClassAssignPage() {
                         ref={ref}
                       />
 
-                      <Button onClick={() => removeAssignment(item._id)}>
+                      <Button onClick={() => removeAssignment(item.id)}>
                         Xóa
                       </Button>
                     </div>

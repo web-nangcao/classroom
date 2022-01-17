@@ -250,9 +250,8 @@ export default function StickyHeadTable() {
       .then((res) => {
         console.log("tra ve");
         console.log(res.data.resValue);
-        const tempRow = [];
-        const tempGrade = res.data.resValue;
         updateData(res);
+        console.log("upload");
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -269,14 +268,15 @@ export default function StickyHeadTable() {
     console.log(event.target.files[0]);
   }
 
-  const updateData = (res) => {
+  const updateData = async (res) => {
     console.log("hello", res.data.resValue);
     let tempCol = [
       { key: "name", id: "" },
       { key: "code", id: "" },
     ];
     const tempAssignment = res.data.resValue.assignments;
-    tempAssignment.forEach((assignment) => {
+    tempAssignment.forEach((assignmentID) => {
+      const assignment = assignmentID.assignmentId;
       let temp = { key: `${assignment.name}`, id: `${assignment._id}` };
       tempCol.push(temp);
     });
@@ -285,10 +285,13 @@ export default function StickyHeadTable() {
     const tempRow = [];
     const tempGrade = res.data.resValue.grades;
     tempGrade.forEach((grade) => {
+      console.log("grade", grade);
       tempRow.push(grade);
     });
-    setRow(tempRow);
+    console.log("tempRow", tempRow);
+    await setRow(() => tempRow);
     console.log("row ne", rows);
+    console.log("hello");
   };
 
   return (
