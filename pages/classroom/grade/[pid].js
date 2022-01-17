@@ -21,6 +21,7 @@ import { MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import FileData from "../../../components/classroom/Grade/fileData";
+import MenuList from "../../../components/classroom/Grade/menu";
 
 import TopBarClassDetail from "../../../components/topBarClassDetail/topBarClassDetail";
 
@@ -55,7 +56,6 @@ export default function StickyHeadTable() {
   const studentInfor = ["Họ và Tên: ", "MSSV: "];
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
-    console.log("hello");
     console.log(data);
     axiosApiCall(
       `classroom-grade/download-student-list-template/61e3ce15876a79e98d85769e`,
@@ -90,6 +90,7 @@ export default function StickyHeadTable() {
     if (!pid) {
       return;
     }
+    console.log("use effect Grade Board");
 
     axiosApiCall(
       `classroom-grade/classroom-grade-detail/${pid}`,
@@ -152,6 +153,33 @@ export default function StickyHeadTable() {
       .then((res) => {
         console.log(res.data.resValue);
         window.open(res.data.resValue.url);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
+
+  const mark_assignment_finallized = (assignmentID, is_finallized) => {
+    console.log(assignmentID);
+    const data = {
+      classroomId: pid,
+      assignmentId: assignmentID,
+      is_finallized: !is_finallized,
+    };
+    console.log(assignmentID);
+    axiosApiCall(
+      `classroom-grade/mark-assignment-finallized`,
+      "post",
+      headers,
+      data
+    )
+      .then((res) => {
+        console.log(res.data);
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -268,7 +296,7 @@ export default function StickyHeadTable() {
   }
 
   const updateData = async (res) => {
-    console.log("hello", res.data.resValue);
+    console.log("respone", res.data.resValue);
     let tempCol = [
       { key: "name", id: "" },
       { key: "code", id: "" },
@@ -280,6 +308,7 @@ export default function StickyHeadTable() {
       tempCol.push(temp);
     });
     setColumn(tempCol);
+    console.log("colums", columns);
 
     const tempRow = [];
     const tempGrade = res.data.resValue.grades;
@@ -290,7 +319,6 @@ export default function StickyHeadTable() {
 
     setRow(tempRow);
     console.log("row ne", rows);
-    console.log("hello");
   };
 
   return (
@@ -330,7 +358,7 @@ export default function StickyHeadTable() {
                                 <span className={gradeStyle.headerLabel}>
                                   {column.key}
                                 </span>
-                                <span className={gradeStyle.moreOption}>
+                                {/* <span className={gradeStyle.moreOption}>
                                   <Button
                                     size="large"
                                     aria-label="account of current user"
@@ -341,8 +369,8 @@ export default function StickyHeadTable() {
                                   >
                                     <ArrowDropDownIcon />
                                   </Button>
-                                  <Menu
-                                    id="menu-appbar"
+                                  {/* <Menu
+                                    id={`actions-${column.id}`}
                                     anchorEl={anchorEl}
                                     anchorOrigin={{
                                       vertical: "top",
@@ -356,8 +384,15 @@ export default function StickyHeadTable() {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                   >
-                                    <MenuItem onClick={handleClose}>
-                                      Công bố điểm
+                                    <MenuItem
+                                      onClick={(e) =>
+                                        mark_assignment_finallized(
+                                          e.target.getAttribute("data-id")
+                                        )
+                                      }
+                                      data-id={column.id}
+                                    >
+                                      {column.id}
                                     </MenuItem>
                                     <MenuItem
                                       onClick={() =>
@@ -369,8 +404,23 @@ export default function StickyHeadTable() {
                                     <MenuItem onClick={handleClose}>
                                       Import file
                                     </MenuItem>
-                                  </Menu>
-                                </span>
+                                  </Menu> }
+                                  <MenuList
+                                    id={column.id}
+                                    mark_assignment_finallized={
+                                      mark_assignment_finallized
+                                    }
+                                    exportFile_SpecGrade={exportFile_SpecGrade}
+                                  ></MenuList>
+                                </span> */}
+                                <MenuList
+                                  id={column.id}
+                                  mark_assignment_finallized={
+                                    mark_assignment_finallized
+                                  }
+                                  exportFile_SpecGrade={exportFile_SpecGrade}
+                                  classStyle={gradeStyle.moreOption}
+                                ></MenuList>
                               </TableCell>
                             )
                           )}

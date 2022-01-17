@@ -116,7 +116,7 @@ export default function StickyHeadTable() {
     if (!pid) {
       return;
     }
-
+    console.log("use effect Student Review");
     let Col = Object.keys(data[0]);
     //Col.push("Tong ket");
     setColumn(Col);

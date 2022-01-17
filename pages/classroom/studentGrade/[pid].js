@@ -76,34 +76,18 @@ export default function StickyHeadTable() {
   const router = useRouter();
   const { pid } = router.query;
   const { register, handleSubmit, reset, control } = useForm();
-  const onSubmit = (data) => {
-    console.log("hello");
-    console.log(data);
-    const access_token = "Bearer " + Cookie.get("accesstoken");
-    const headers = { authorization: access_token };
-    axiosApiCall(`classroom-grade/student-view-spec-grade`, "get", headers, [])
-      .then((res) => {
-        console.log("classroom-grade/download-student-list-template");
-        console.log(res.data.resValue);
-      })
-      .catch(function (error) {
-        console.log("lỗi rồi nè má");
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
-  };
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRow] = useState([]);
   const [columns, setColumn] = useState([]);
-  const [overal, setOveral] = useState(0);
+  const [overal, setOveral] = useState("");
 
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
+  const [assignments, setAssignments] = useState([]);
+  const [listGrade, setListGrade] = useState([]);
 
   const access_token = "Bearer " + Cookie.get("accesstoken");
   const headers = { authorization: access_token };
@@ -116,13 +100,48 @@ export default function StickyHeadTable() {
     if (!pid) {
       return;
     }
+    console.log("use effect Student Grade");
     const data = { classroomId: pid };
     axiosApiCall(`classroom-grade/student-view-grades`, "post", headers, data)
       .then((res) => {
         if (res.data != false) {
+          console.log("respone", res.data);
+          const assignmentsReturn = res.data.assignments;
+          const ListGradeReturn = res.data.grade;
+          const tempAssignmentList = [];
+          assignmentsReturn.forEach((assignment) => {
+            tempAssignmentList.push({
+              ...assignment.assignmentId,
+              is_finallized: assignment.is_finallized,
+            });
+          });
+          setAssignments(tempAssignmentList);
           setCode(res.data.grade.code);
           setName(res.data.grade.name);
-          console.log(res.data);
+          setListGrade(ListGradeReturn);
+          let sumPoint = 0;
+          let sumRate = 0;
+          assignmentsReturn.forEach((assignment) => {
+            if (assignment.is_finallized) {
+              sumPoint +=
+                parseInt(assignment.assignmentId.point) *
+                parseInt(ListGradeReturn[assignment.assignmentId.name]);
+              sumRate += parseInt(assignment.assignmentId.point);
+              console.log("sumRate", sumRate);
+              console.log("sumPoint", parseInt(assignment.assignmentId.point));
+              console.log(
+                "sumPointGrade",
+                parseInt(ListGradeReturn[assignment.assignmentId.name])
+              );
+            }
+          });
+          if (sumRate != 0) {
+            console.log("hello");
+            setOveral(parseInt(sumPoint / sumRate));
+          } else {
+            console.log(sumPoint);
+            console.log(sumRate);
+          }
         }
       })
       .catch(function (error) {
@@ -133,19 +152,6 @@ export default function StickyHeadTable() {
           console.log(error.response.headers);
         }
       });
-
-    //Col.push("Tong ket");
-    let col = Object.keys(dummy[0]);
-    setColumn(col);
-    setRow(dummy);
-
-    let sumPoint = 0;
-    let sumRate = 0;
-    dummy.forEach((assignment) => {
-      sumPoint += parseInt(assignment.point) * parseInt(assignment.rate);
-      sumRate += parseInt(assignment.rate);
-    });
-    setOveral(parseInt(sumPoint / sumRate));
   }, [pid]);
 
   const handleChangePage = (event, newPage) => {
@@ -216,16 +222,20 @@ export default function StickyHeadTable() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
+                  {assignments.map((assignment) => (
                     <TableRow
-                      key={row.name}
+                      key={assignment._id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        {assignment.name}
                       </TableCell>
-                      <TableCell>{row.rate}</TableCell>
-                      <TableCell align="right">{row.point}</TableCell>
+                      <TableCell>{assignment.point}</TableCell>
+                      <TableCell align="right">
+                        {assignment.is_finallized
+                          ? listGrade[assignment.name]
+                          : "**"}
+                      </TableCell>
 
                       <TableCell align="right">
                         <Link href={`/classroom/studentGrade/review/${pid}`}>
@@ -238,9 +248,13 @@ export default function StickyHeadTable() {
                   ))}
                 </TableBody>
                 <TableRow>
-                  <TableCell>Tổng kết</TableCell>
+                  <TableCell className={gradeStyle.finalScore}>
+                    Tổng kết
+                  </TableCell>
                   <TableCell></TableCell>
-                  <TableCell align="right">{overal}</TableCell>
+                  <TableCell align="right" className={gradeStyle.finalScore}>
+                    {overal !== "" ? overal : "**"}
+                  </TableCell>
                   <TableCell align="right"></TableCell>
                 </TableRow>
               </Table>
