@@ -69,33 +69,38 @@ export default function TopBarClassDetail({ id }) {
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
             {classID !== "" ? (
               <Link href={`/classroom/detail/${classID}`}>
-                <a>Tất Cả</a>
+                <a className={topBarClassDetailStyle.menuItem}>Tất Cả</a>
               </Link>
             ) : (
               <Link href={`/classroom`}>
-                <a>Tất Cả</a>
+                <a className={topBarClassDetailStyle.menuItem}>Tất Cả</a>
               </Link>
             )}
           </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
             {classID !== "" ? (
               <Link href={`/classroom/assignment/${classID}`}>
-                <a>Bài Học</a>
+                <a className={topBarClassDetailStyle.menuItem}>Bài Học</a>
               </Link>
             ) : (
               <Link href={`/classroom`}>
-                <a>Bài Học</a>
+                <a className={topBarClassDetailStyle.menuItem}>Bài Học</a>
               </Link>
             )}
           </Grid>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
             <Link href={`/classroom/grade/${classID}`}>
-              <a>Điểm số</a>
+              <a className={topBarClassDetailStyle.menuItem}> Quản lý điểm</a>
             </Link>
           </Grid>
-          <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
+          <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
+            <Link href={`/classroom/studentGrade/${classID}`}>
+              <a className={topBarClassDetailStyle.menuItem}>Bảng điểm</a>
+            </Link>
+          </Grid>
+          <Grid item xs={3} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/classroom/people">
-              <a>Người tham dự</a>
+              <a className={topBarClassDetailStyle.menuItem}>Người tham dự</a>
             </Link>
           </Grid>
 

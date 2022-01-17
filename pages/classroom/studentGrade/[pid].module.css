@@ -1,4 +1,22 @@
 .container {
     display: flex;
     justify-content: center;
+    margin: 20px;
+}
+
+.header {
+    font-weight: bold;
+    font-size: 35px;
+    text-align: center;
+    color: blue;
+}
+
+.info {
+    font-weight: bold;
+    padding-left: 60px;
+}
+
+.className {
+    font-size: 30px;
+    color: red;
 }

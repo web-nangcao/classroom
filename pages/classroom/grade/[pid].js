@@ -249,9 +249,8 @@ export default function StickyHeadTable() {
     )
       .then((res) => {
         console.log("tra ve");
-        console.log(res.data.resValue);
+
         updateData(res);
-        console.log("upload");
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -288,8 +287,8 @@ export default function StickyHeadTable() {
       console.log("grade", grade);
       tempRow.push(grade);
     });
-    console.log("tempRow", tempRow);
-    await setRow(() => tempRow);
+
+    setRow(tempRow);
     console.log("row ne", rows);
     console.log("hello");
   };

@@ -16,6 +16,8 @@ import Lesson from "../../../components/classroom/detail/lesson";
 import Banner from "../../../components/classroom/detail/bannerClassDetail";
 import Upcoming from "../../../components/classroom/detail/upComingHomeWork";
 import Assignment from "../../../components/classroom/detail/AsssginmentScript";
+import { Button, TextField } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 
 import libClassroom from "../../../lib/classroom";
 import axios from "axios";
@@ -48,6 +50,24 @@ export default function ClassroomDetailPage() {
   const assignments = [1, 2, 3, 4];
 
   const [loadingPage, setLoadingPage] = useState(true);
+
+  const { register, handleSubmit, reset, control } = useForm();
+  const onSubmit = (data) => {
+    const mappingData = { code: data.code, classroomId: pid };
+    axiosApiCall(`mapping-student-code`, "post", headers, mappingData)
+      .then((res) => {
+        console.log("tra ve");
+        console.log(res.data);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
 
   useEffect(() => {
     //console.log("hello");
@@ -149,6 +169,25 @@ export default function ClassroomDetailPage() {
                   ></Assignment>
                 </Grid>
                 <Grid item xs={9}>
+                  <form>
+                    <Controller
+                      name={"textValue"}
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <>
+                          <TextField
+                            required
+                            id="outlined-required"
+                            label="Mã số sinh viên: "
+                            defaultValue=""
+                            {...register("code")}
+                            onChange={onChange}
+                          />
+                        </>
+                      )}
+                    />
+                    <Button onClick={handleSubmit(onSubmit)}>Map</Button>
+                  </form>
                   <Stack spacing={2}>
                     {listLesson.map((lesson, index) => {
                       return <Lesson key={index} lesson={lesson}></Lesson>;

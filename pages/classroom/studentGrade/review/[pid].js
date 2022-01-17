@@ -30,6 +30,7 @@ import Cookie from "js-cookie";
 import axios from "axios";
 
 import TopBarClassDetail from "../../../../components/topBarClassDetail/topBarClassDetail";
+import Comment from "../../../../components/classroom/studentGrade/comment";
 
 const axiosApiCall = (url, method, headers = {}, data) =>
   axios({
@@ -75,6 +76,12 @@ const data = [
 export default function StickyHeadTable() {
   const router = useRouter();
   const { pid } = router.query;
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRow] = useState([]);
+  const [columns, setColumn] = useState([]);
+  const [overal, setOveral] = useState(0);
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
     console.log("hello");
@@ -100,12 +107,6 @@ export default function StickyHeadTable() {
         }
       });
   };
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setRow] = useState([]);
-  const [columns, setColumn] = useState([]);
-  const [overal, setOveral] = useState(0);
 
   useEffect(() => {
     if (!Cookie.get("accesstoken")) {
@@ -160,95 +161,114 @@ export default function StickyHeadTable() {
   return (
     <>
       <TopBarClassDetail></TopBarClassDetail>
-      <div className={gradeStyle.container}>
-        <Paper
-          sx={{ width: "70%", overflow: "hidden", justifyContent: "center" }}
-        >
-          <form>
-            <Controller
-              name={"textValue"}
-              control={control}
-              render={({ field: { onChange, value } }) => <></>}
-            />
-            <p>Dương Bội Long</p>
-            <p>MSSV</p>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Loại điểm</TableCell>
-                    <TableCell>Tỉ lệ điểm</TableCell>
-                    <TableCell align="right">Điểm</TableCell>
-                    <TableCell align="right">Phúc khảo</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row) => (
-                    <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
+      <div className={gradeStyle.content}>
+        <div className={gradeStyle.main}>
+          <div className={gradeStyle.container}>
+            <Paper
+              sx={{
+                width: "100%",
+                overflow: "hidden",
+                justifyContent: "center",
+              }}
+            >
+              <p className={gradeStyle.header}> Phúc Khảo</p>
+              <TableContainer
+                component={Paper}
+                className={gradeStyle.gradeBoard}
+              >
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Loại điểm</TableCell>
+                      <TableCell align="right">Điểm hiện tại</TableCell>
+                      <TableCell align="right">Điểm mong đợi</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        Cuối kỳ
                       </TableCell>
-                      <TableCell>{row.rate}</TableCell>
-                      <TableCell align="right">{row.point}</TableCell>
-
-                      <TableCell align="right">
-                        <IconButton color="primary" aria-label="Phúc khảo">
-                          <HelpOutlineIcon />
-                        </IconButton>
+                      <TableCell component="th" scope="row" align="right">
+                        90
+                      </TableCell>
+                      <TableCell align="right" align="right">
+                        100
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-                <TableRow>
-                  <TableCell>Tổng kết</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell align="right">{overal}</TableCell>
-                  <TableCell align="right"></TableCell>
-                </TableRow>
-              </Table>
-            </TableContainer>
-          </form>
-          <Grid item container xs={12}>
-            <Grid item xs={1}>
-              <Image
-                src="/images/teacher.jpg" // Route of the image file
-                height={50} // Desired size with correct aspect ratio
-                width={50} // Desired size with correct aspect ratio
-                alt="Avatar"
-                className={gradeStyle.image}
-              />
-            </Grid>
-            <Grid item xs={10}>
-              <form>
-                <Grid container>
-                  <Grid item xs={11.5}>
-                    <Controller
-                      name={"textValue"}
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <>
-                          <TextField
-                            id="outlined-required"
-                            label="Add your comment:"
-                            defaultValue=""
-                            onChange={onChange}
-                            style={{ width: "100%" }}
-                          />
-                        </>
-                      )}
-                    />
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </div>
+          <div className={gradeStyle.buttonSpace}>
+            <Button
+              variant="contained"
+              color="success"
+              className={gradeStyle.button}
+            >
+              Chấp Nhận
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              className={gradeStyle.button}
+            >
+              Từ Chối
+            </Button>
+            <Button variant="contained" className={gradeStyle.button}>
+              Chấm Lại
+            </Button>
+          </div>
+          <div className={gradeStyle.userComment}>
+            <Grid item container xs={12}>
+              <Grid item xs={1}>
+                <Image
+                  src="/images/teacher.jpg" // Route of the image file
+                  height={50} // Desired size with correct aspect ratio
+                  width={50} // Desired size with correct aspect ratio
+                  alt="Avatar"
+                  className={gradeStyle.image}
+                />
+              </Grid>
+              <Grid item xs={10}>
+                <form>
+                  <Grid container>
+                    <Grid item xs={11.5}>
+                      <Controller
+                        name={"textValue"}
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <>
+                            <TextField
+                              id="outlined-required"
+                              label="Thêm Bình Luận"
+                              defaultValue=""
+                              onChange={onChange}
+                              style={{ width: "100%" }}
+                            />
+                          </>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={0.5}>
+                      <Button onClick={handleSubmit(onSubmit)}>Gửi</Button>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={0.5}>
-                    <Button onClick={handleSubmit(onSubmit)}>Send</Button>
-                  </Grid>
-                </Grid>
-              </form>
+                </form>
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
+          </div>
+          <div className={gradeStyle.comment}>
+            <Comment></Comment>
+          </div>
+          <div className={gradeStyle.comment}>
+            <Comment></Comment>
+          </div>
+          <div className={gradeStyle.comment}>
+            <Comment></Comment>
+          </div>
+        </div>
       </div>
     </>
   );

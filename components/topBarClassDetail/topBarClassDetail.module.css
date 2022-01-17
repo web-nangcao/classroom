@@ -17,3 +17,8 @@
 .topBarContainer {
     margin-bottom: 30px;
 }
+
+.menuItem {
+    font-weight: bold;
+    color: green;
+}

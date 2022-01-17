@@ -21,11 +21,15 @@ import Menu from "@mui/material/Menu";
 import { MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import Grid from "@mui/material/Grid";
 
 import gradeStyle from "./[pid].module.css";
 import Cookie from "js-cookie";
+import Link from "next/dist/client/link";
 
 import axios from "axios";
+
+import TopBarClassDetail from "../../../components/topBarClassDetail/topBarClassDetail";
 
 const axiosApiCall = (url, method, headers = {}, data) =>
   axios({
@@ -40,7 +44,7 @@ function createData(name, code, population, size) {
   return { name, code, population, size, density };
 }
 
-const data = [
+const dummy = [
   {
     name: "Cuối kỳ",
     rate: 10,
@@ -77,12 +81,7 @@ export default function StickyHeadTable() {
     console.log(data);
     const access_token = "Bearer " + Cookie.get("accesstoken");
     const headers = { authorization: access_token };
-    axiosApiCall(
-      `classroom-grade/download-student-list-template/61bca5ded81f63a8b22568d8`,
-      "get",
-      headers,
-      []
-    )
+    axiosApiCall(`classroom-grade/student-view-spec-grade`, "get", headers, [])
       .then((res) => {
         console.log("classroom-grade/download-student-list-template");
         console.log(res.data.resValue);
@@ -103,23 +102,46 @@ export default function StickyHeadTable() {
   const [columns, setColumn] = useState([]);
   const [overal, setOveral] = useState(0);
 
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+
+  const access_token = "Bearer " + Cookie.get("accesstoken");
+  const headers = { authorization: access_token };
+
   useEffect(() => {
     if (!Cookie.get("accesstoken")) {
-      Cookie.set("prePath", `/classroom/detail/${pid}`);
+      Cookie.set("prePath", `/classroom/studentGrade/${pid}`);
       router.push("/login");
     }
     if (!pid) {
       return;
     }
+    const data = { classroomId: pid };
+    axiosApiCall(`classroom-grade/student-view-grades`, "post", headers, data)
+      .then((res) => {
+        if (res.data != false) {
+          setCode(res.data.grade.code);
+          setName(res.data.grade.name);
+          console.log(res.data);
+        }
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
 
-    let Col = Object.keys(data[0]);
     //Col.push("Tong ket");
-    setColumn(Col);
-    setRow(data);
+    let col = Object.keys(dummy[0]);
+    setColumn(col);
+    setRow(dummy);
 
     let sumPoint = 0;
     let sumRate = 0;
-    data.forEach((assignment) => {
+    dummy.forEach((assignment) => {
       sumPoint += parseInt(assignment.point) * parseInt(assignment.rate);
       sumRate += parseInt(assignment.rate);
     });
@@ -154,77 +176,78 @@ export default function StickyHeadTable() {
     setAnchorEl(null);
   };
   return (
-    <div className={gradeStyle.container}>
-      <Paper
-        sx={{ width: "70%", overflow: "hidden", justifyContent: "center" }}
-      >
-        <form>
-          <Controller
-            name={"textValue"}
-            control={control}
-            render={({ field: { onChange, value } }) => <></>}
-          />
-          <p>Dương Bội Long</p>
-          <p>MSSV</p>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Loại điểm</TableCell>
-                  <TableCell>Tỉ lệ điểm</TableCell>
-                  <TableCell align="right">Điểm</TableCell>
-                  <TableCell align="right">Phúc khảo</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell>{row.rate}</TableCell>
-                    <TableCell align="right">{row.point}</TableCell>
+    <>
+      <TopBarClassDetail></TopBarClassDetail>
+      <div className={gradeStyle.container}>
+        <Paper
+          sx={{ width: "70%", overflow: "hidden", justifyContent: "center" }}
+        >
+          <form>
+            <Controller
+              name={"textValue"}
+              control={control}
+              render={({ field: { onChange, value } }) => <></>}
+            />
 
-                    <TableCell align="right">
-                      <IconButton color="primary" aria-label="Phúc khảo">
-                        <HelpOutlineIcon />
-                      </IconButton>
-                    </TableCell>
+            <p className={gradeStyle.header}>Bảng Điểm Chi Tiết</p>
+            <Grid container>
+              <Grid item xs={7}>
+                <p className={gradeStyle.info}>Họ và Tên: {name}</p>
+                <p className={gradeStyle.info}>MSSV: {code}</p>
+              </Grid>
+              <Grid>
+                <p className={gradeStyle.info}>
+                  Môn học:{" "}
+                  <span className={gradeStyle.className}>
+                    Lập Trình ReactJs
+                  </span>
+                </p>
+              </Grid>
+            </Grid>
+
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Loại điểm</TableCell>
+                    <TableCell>Tỉ lệ điểm</TableCell>
+                    <TableCell align="right">Điểm</TableCell>
+                    <TableCell align="right">Phúc khảo</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-              <TableRow>
-                <TableCell>Tổng kết</TableCell>
-                <TableCell></TableCell>
-                <TableCell align="right">{overal}</TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow
+                      key={row.name}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                      <TableCell>{row.rate}</TableCell>
+                      <TableCell align="right">{row.point}</TableCell>
 
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleSubmit(onSubmit)}
-            className={gradeStyle.button}
-          >
-            Lưu điểm
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            className={gradeStyle.button}
-          >
-            Export File
-          </Button>
-          <Button variant="contained" className={gradeStyle.button}>
-            Import File
-          </Button>
-        </form>
-      </Paper>
-    </div>
+                      <TableCell align="right">
+                        <Link href={`/classroom/studentGrade/review/${pid}`}>
+                          <a>
+                            <HelpOutlineIcon color="secondary" />
+                          </a>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableRow>
+                  <TableCell>Tổng kết</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell align="right">{overal}</TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+              </Table>
+            </TableContainer>
+          </form>
+        </Paper>
+      </div>
+    </>
   );
 }
