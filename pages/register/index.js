@@ -18,9 +18,7 @@ import Box from '@mui/material/Box';
 const axiosApiCall = (url, method, body = {}) =>
     axios({
         method,
-        // url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
-        // test
-        url: `http://localhost:3000/api/register`,
+        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
         data: body,
     });
 
@@ -57,20 +55,27 @@ export default function Register() {
         const data = new FormData(event.currentTarget);
         // eslint-disable-next-line no-console
 
-        let check = validate(data.get('email'), data.get('name'), data.get('password'), data.get('re-password'));
+        let check = validate(data.get("email"), data.get("name"),data.get("password"),data.get("re-password"));
 
+        const postData = {
+            email: data.get("email"),
+            name: data.get("name"),
+            password: data.get("password"),
+        }
         if (check === true) {
-            axiosApiCall("auth/google-token", "post", { access_token })
+            axiosApiCall("user/local-register", "post", postData )
                 .then((res) => {
+                    console.log(res);
                     let data = res.data;
-                    if (data.success) {
-                        setSuccess("123")
-                        setError("")
+                    if (data.resValue) {
+                        setSuccess("Register Success . Check your email to activate account.");
+                        setError("");
+
                     }
 
                     if (data.error) {
-                        setError("123")
-                        setSuccess("")
+                        setSuccess("");
+                        setError(data.error);
                     }
                 })
                 .catch(function (error) {
@@ -82,8 +87,6 @@ export default function Register() {
                     }
                 });
         }
-
-
     };
 
     const validate = (v_email, v_name, v_password, v_repassword) => {
@@ -199,7 +202,7 @@ export default function Register() {
                             helperText={errors.name != "" ? errors.name : ' '}
                         />
                         {success != "" &&
-                            <Alert sx={{ mb: 2 }} severity="success">Your account is registered.</Alert>
+                            <Alert sx={{ mb: 2 }} severity="success">{success}</Alert>
                         }
                         {error != "" &&
                             <Alert sx={{ mb: 2 }} severity="error">Email is already taken.</Alert>
