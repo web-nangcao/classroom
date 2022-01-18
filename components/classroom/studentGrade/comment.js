@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 
 import commentStyle from "./comment.module.css";
 
-export default function Comment() {
+export default function Comment({ content, personName }) {
   const { handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => console.log(data);
   return (
@@ -25,12 +25,12 @@ export default function Comment() {
         <Grid item xs={10}>
           <Grid container>
             <Grid item xs={11.5}>
-              <div className={commentStyle.personName}>Duong Boi Long</div>
+              <div className={commentStyle.personName}>{personName}</div>
             </Grid>
           </Grid>
           <Grid container>
             <Grid item xs={11.5}>
-              <div className={commentStyle.comment}>comment here</div>
+              <div className={commentStyle.comment}>{content}</div>
             </Grid>
           </Grid>
         </Grid>

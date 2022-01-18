@@ -46,34 +46,6 @@ function createData(name, code, population, size) {
   return { name, code, population, size, density };
 }
 
-const data = [
-  {
-    name: "Cuối kỳ",
-    rate: 10,
-    point: 100,
-  },
-  {
-    name: "Giữa kỳ",
-    rate: 5,
-    point: 80,
-  },
-  {
-    name: "Seminar",
-    rate: 5,
-    point: 90,
-  },
-  {
-    name: "Bài tập về nhà",
-    rate: 4,
-    point: 80,
-  },
-  {
-    name: "Bài tập tại lớp",
-    rate: 4,
-    point: 100,
-  },
-];
-
 export async function getServerSideProps(context) {
   console.log(context.query);
   // returns { id: episode.itunes.episode, title: episode.title}
@@ -96,23 +68,39 @@ export default function StickyHeadTable(props) {
   const [columns, setColumn] = useState([]);
   const [overal, setOveral] = useState(0);
   const { register, handleSubmit, reset, control } = useForm();
+  const [currentReview, setCurrentReview] = useState(false);
   const onSubmit = (data) => {
     console.log("hello");
     console.log(data);
+
     const access_token = "Bearer " + Cookie.get("accesstoken");
     const headers = { authorization: access_token };
-    axiosApiCall(
-      `student-reviewe/comment-review`,
-      "post",
-      headers,
-      []
-    )
+    console.log(currentReview.studentReviewId);
+    const req = {
+      studentReviewId: currentReview.studentReviewId,
+      comment: data.comment,
+    };
+    console.log("rew", req);
+    axiosApiCall(`student-review/comment-review`, "post", headers, req)
       .then((res) => {
-        console.log("classroom-grade/download-student-list-template");
-        console.log(res.data.resValue);
+        console.log("student-review/comment-review");
+        console.log(res.data);
+        const review = res.data;
+        let tempReview = false;
+        tempReview = {
+          assignmentId: review.assignmentId._id,
+          classroomId: review.classroomId._id,
+          comments: review.comments.reverse(),
+          is_finallized: review.is_finallized,
+          cur_grade: review.cur_grade,
+          exp_grade: review.exp_grade,
+          explain: review.explain,
+          studentReviewId: review._id,
+        };
+        setCurrentReview(tempReview);
       })
       .catch(function (error) {
-        console.log("lỗi rồi nè má");
+        console.log("lỗi");
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -142,6 +130,29 @@ export default function StickyHeadTable(props) {
     )
       .then((res) => {
         console.log("respone", res.data);
+
+        res.data.forEach((review) => {
+          if (review.is_finallized == false) {
+            console.log("hi");
+            let tempReview = false;
+            tempReview = {
+              assignmentId: review.assignmentId._id,
+              classroomId: review.classroomId._id,
+              comments: review.comments.reverse(),
+              is_finallized: review.is_finallized,
+              cur_grade: review.cur_grade,
+              exp_grade: review.exp_grade,
+              explain: review.explain,
+              studentReviewId: review._id,
+            };
+            setCurrentReview(tempReview);
+          } else {
+            console.log("hello");
+            return;
+          }
+        });
+
+        console.log("currentReview", currentReview);
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -165,7 +176,7 @@ export default function StickyHeadTable(props) {
     console.log(req);
     axiosApiCall(`student-review/student-create-review`, "post", headers, req)
       .then((res) => {
-        console.log("respone", res.data);
+        updateData(res);
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -175,6 +186,21 @@ export default function StickyHeadTable(props) {
           console.log(error.response.headers);
         }
       });
+  };
+
+  const updateData = (res) => {
+    const review = res.data;
+    let tempReview = false;
+    tempReview = {
+      assignmentId: review.assignmentId._id,
+      classroomId: review.classroomId._id,
+      comments: review.comments.reverse(),
+      is_finallized: review.is_finallized,
+      cur_grade: review.cur_grade,
+      exp_grade: review.exp_grade,
+      explain: review.explain,
+      studentReviewId: review._id,
+    };
   };
 
   const handleChange = (event, pos) => {
@@ -215,7 +241,12 @@ export default function StickyHeadTable(props) {
               }}
             >
               <p className={gradeStyle.header}> Phúc Khảo</p>
-              <Review submitReview={submitReview}></Review>
+              {currentReview === false ? (
+                <Review submitReview={submitReview}></Review>
+              ) : (
+                <></>
+              )}
+
               <TableContainer
                 component={Paper}
                 className={gradeStyle.gradeBoard}
@@ -237,7 +268,7 @@ export default function StickyHeadTable(props) {
                         {props.query.point}
                       </TableCell>
                       <TableCell align="right" align="right">
-                        100
+                        {currentReview !== false ? currentReview.exp_grade : ""}
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -264,54 +295,57 @@ export default function StickyHeadTable(props) {
               Chấm Lại
             </Button>
           </div>
-          <div className={gradeStyle.userComment}>
-            <Grid item container xs={12}>
-              <Grid item xs={1}>
-                <Image
-                  src="/images/teacher.jpg" // Route of the image file
-                  height={50} // Desired size with correct aspect ratio
-                  width={50} // Desired size with correct aspect ratio
-                  alt="Avatar"
-                  className={gradeStyle.image}
-                />
-              </Grid>
-              <Grid item xs={10}>
-                <form>
-                  <Grid container>
-                    <Grid item xs={11.5}>
-                      <Controller
-                        name={"textValue"}
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                          <>
-                            <TextField
-                              id="outlined-required"
-                              label="Thêm Bình Luận"
-                              defaultValue=""
-                              onChange={onChange}
-                              style={{ width: "100%" }}
-                            />
-                          </>
-                        )}
-                      />
+          {currentReview !== false && (
+            <div className={gradeStyle.userComment}>
+              <Grid item container xs={12}>
+                <Grid item xs={1}>
+                  <Image
+                    src="/images/teacher.jpg" // Route of the image file
+                    height={50} // Desired size with correct aspect ratio
+                    width={50} // Desired size with correct aspect ratio
+                    alt="Avatar"
+                    className={gradeStyle.image}
+                  />
+                </Grid>
+                <Grid item xs={10}>
+                  <form>
+                    <Grid container>
+                      <Grid item xs={11.5}>
+                        <Controller
+                          name={"textValue"}
+                          control={control}
+                          render={({ field: { onChange, value } }) => (
+                            <>
+                              <TextField
+                                id="outlined-required"
+                                label="Thêm Bình Luận"
+                                defaultValue=""
+                                onChange={onChange}
+                                {...register(`comment`)}
+                                style={{ width: "100%" }}
+                              />
+                            </>
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={0.5}>
+                        <Button onClick={handleSubmit(onSubmit)}>Gửi</Button>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={0.5}>
-                      <Button onClick={handleSubmit(onSubmit)}>Gửi</Button>
-                    </Grid>
-                  </Grid>
-                </form>
+                  </form>
+                </Grid>
               </Grid>
-            </Grid>
-          </div>
-          <div className={gradeStyle.comment}>
-            <Comment></Comment>
-          </div>
-          <div className={gradeStyle.comment}>
-            <Comment></Comment>
-          </div>
-          <div className={gradeStyle.comment}>
-            <Comment></Comment>
-          </div>
+            </div>
+          )}
+          {currentReview !== false &&
+            currentReview.comments.map((comment) => (
+              <div className={gradeStyle.comment} key={comment._id}>
+                <Comment
+                  content={comment.comment}
+                  personName={comment.user.email}
+                ></Comment>
+              </div>
+            ))}
         </div>
       </div>
     </>

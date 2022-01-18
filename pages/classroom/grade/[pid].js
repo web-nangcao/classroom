@@ -19,6 +19,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import { MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Grid from "@mui/material/Grid";
 
 import FileData from "../../../components/classroom/Grade/fileData";
 import MenuList from "../../../components/classroom/Grade/menu";
@@ -330,6 +331,34 @@ export default function StickyHeadTable() {
       <TopBarClassDetail></TopBarClassDetail>
       <div className={gradeStyle.container}>
         <Paper sx={{ width: "80%", overflow: "hidden" }}>
+          <Grid container>
+            <Grid item xs={8}></Grid>
+            <Grid item xs={4}>
+              <Link
+                href={{
+                  pathname: `/classroom/grade/reviewTeacher/${pid}`,
+                  query: {
+                    /*assignmentId: assignment._id,
+                    name: assignment.name,
+                    point: assignment.is_finallized
+                      ? listGrade[assignment.name]
+                      : "**",
+                    is_finallized: assignment.is_finallized,*/
+                  },
+                }}
+              >
+                <a>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    className={gradeStyle.button}
+                  >
+                    Xem Yêu Cầu Phúc Khảo
+                  </Button>
+                </a>
+              </Link>
+            </Grid>
+          </Grid>
           <form>
             <Controller
               name={"textValue"}

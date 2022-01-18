@@ -32,6 +32,8 @@ export default function TopBarClassDetail({ id }) {
 
   const isMenuOpen = Boolean(anchorAdd);
 
+  const [userType, setUserType] = useState(Cookie.get("userType"));
+
   const handleProfileMenuOpen = (event) => {
     setAnchorAdd(event.currentTarget);
   };
@@ -88,17 +90,21 @@ export default function TopBarClassDetail({ id }) {
               </Link>
             )}
           </Grid>
-          <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <Link href={`/classroom/grade/${classID}`}>
-              <a className={topBarClassDetailStyle.menuItem}> Quản lý điểm</a>
-            </Link>
-          </Grid>
-          <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <Link href={`/classroom/studentGrade/${classID}`}>
-              <a className={topBarClassDetailStyle.menuItem}>Bảng điểm</a>
-            </Link>
-          </Grid>
-          <Grid item xs={3} className={topBarClassDetailStyle.topBarItem}>
+          {userType == "Student" ? (
+            <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
+              <Link href={`/classroom/studentGrade/${classID}`}>
+                <a className={topBarClassDetailStyle.menuItem}>Bảng điểm</a>
+              </Link>
+            </Grid>
+          ) : (
+            <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
+              <Link href={`/classroom/grade/${classID}`}>
+                <a className={topBarClassDetailStyle.menuItem}> Quản lý điểm</a>
+              </Link>
+            </Grid>
+          )}
+
+          <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/classroom/people">
               <a className={topBarClassDetailStyle.menuItem}>Người tham dự</a>
             </Link>

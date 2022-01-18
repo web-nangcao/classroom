@@ -43,7 +43,10 @@ function SimpleDialog(props) {
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>NỘI DUNG PHÚC KHẢO</DialogTitle>
-      <FormWithHookForm submitReview={props.submitReview}></FormWithHookForm>
+      <FormWithHookForm
+        submitReview={props.submitReview}
+        onClose={onClose}
+      ></FormWithHookForm>
     </Dialog>
   );
 }
@@ -82,9 +85,10 @@ export default function ReviewPopUp({ submitReview }) {
   );
 }
 
-export const FormWithHookForm = ({ submitReview }) => {
+export const FormWithHookForm = ({ submitReview, onClose }) => {
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
+    onClose();
     submitReview(data);
   };
 

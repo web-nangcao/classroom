@@ -50,6 +50,8 @@ export default function ClassroomDetailPage() {
   const assignments = [1, 2, 3, 4];
 
   const [loadingPage, setLoadingPage] = useState(true);
+  const [userType, setUserType] = useState("");
+  const [code, setCode] = useState("");
 
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
@@ -122,6 +124,21 @@ export default function ClassroomDetailPage() {
     axiosApiCall(`get-class-detail/${pid}`, "get", headers, {})
       .then((res) => {
         const classDetailTemp = res.data.resValue.classroom;
+        console.log("respone", res.data);
+        const members = res.data.resValue.classroom.members;
+        const user = JSON.parse(Cookie.get("user"));
+        console.log("user", user);
+        members.forEach((member) => {
+          if (member.email == user.email) {
+            Cookie.set("userType", member.userType);
+            Cookie.set("code", member.code);
+            setUserType(member.userType);
+            setCode(member.code);
+          }
+        });
+        console.log("userType", Cookie.get("userType"));
+        console.log("code", Cookie.get("code"));
+
         console.log("assignment");
         console.log(classDetailTemp.assignments);
         setClassDetail(classDetailTemp);
@@ -169,25 +186,30 @@ export default function ClassroomDetailPage() {
                   ></Assignment>
                 </Grid>
                 <Grid item xs={9}>
-                  <form>
-                    <Controller
-                      name={"textValue"}
-                      control={control}
-                      render={({ field: { onChange, value } }) => (
-                        <>
-                          <TextField
-                            required
-                            id="outlined-required"
-                            label="Mã số sinh viên: "
-                            defaultValue=""
-                            {...register("code")}
-                            onChange={onChange}
-                          />
-                        </>
-                      )}
-                    />
-                    <Button onClick={handleSubmit(onSubmit)}>Map</Button>
-                  </form>
+                  {userType == "Student" && code == "" ? (
+                    <form>
+                      <Controller
+                        name={"textValue"}
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <>
+                            <TextField
+                              required
+                              id="outlined-required"
+                              label="Mã số sinh viên: "
+                              defaultValue=""
+                              {...register("code")}
+                              onChange={onChange}
+                            />
+                          </>
+                        )}
+                      />
+                      <Button onClick={handleSubmit(onSubmit)}>Map</Button>
+                    </form>
+                  ) : (
+                    <></>
+                  )}
+
                   <Stack spacing={2}>
                     {listLesson.map((lesson, index) => {
                       return <Lesson key={index} lesson={lesson}></Lesson>;
