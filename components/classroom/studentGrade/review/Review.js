@@ -21,14 +21,6 @@ import reviewStyle from "./Review.module.css";
 
 import axios from "axios";
 
-const axiosApiCall = (url, method, headers = {}) =>
-  axios({
-    method,
-    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
-    data: {},
-    headers: headers,
-  });
-
 function SimpleDialog(props) {
   const { onClose, selectedValue, open } = props;
 

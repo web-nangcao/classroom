@@ -74,6 +74,7 @@ export default function StickyHeadTable(props) {
   const [code, setCode] = useState("");
   const [studentID, setStudentID] = useState("");
   const [isReviewed, setIsReviewed] = useState(false);
+  const [listOldReview, setListOldReview] = useState("");
   const onSubmit = (data) => {
     if (data.comment !== "") {
       console.log("hello");
@@ -348,28 +349,32 @@ export default function StickyHeadTable(props) {
       });
   };
   const HandleNewGrade = (newGrade) => {
-    console.log("cham la");
-    console.log("chap nhan");
-    const req = {
-      studentReviewId: currentReview.studentReviewId,
-      is_finallized: true,
-      upd_grade: currentReview.newGrade,
-    };
-    console.log(req);
-    /*axiosApiCall(`student-review/mark-finallized`, "post", headers, req)
-      .then((res) => {
-        updateData(res);
-        setIsReviewed(true);
-        console.log("respone accept", res.data);
-      })
-      .catch(function (error) {
-        console.log("lỗi rồi nè má");
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });*/
+    if (newGrade != "") {
+      console.log("cham la");
+      console.log("chap nhan");
+      const req = {
+        studentReviewId: currentReview.studentReviewId,
+        is_finallized: true,
+        upd_grade: newGrade,
+      };
+      console.log(req);
+      axiosApiCall(`student-review/mark-finallized`, "post", headers, req)
+        .then((res) => {
+          updateData(res);
+          setIsReviewed(true);
+          console.log("respone accept", res.data);
+        })
+        .catch(function (error) {
+          console.log("lỗi rồi nè má");
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
+    } else {
+      console.log("rong roi ne");
+    }
   };
 
   return (
@@ -388,7 +393,7 @@ export default function StickyHeadTable(props) {
               <p className={gradeStyle.header}> Phúc Khảo</p>
               <p className={gradeStyle.info}>MSSV: {code}</p>
               {currentReview === false && userType === "Student" ? (
-                <Review submitReview={HandleNewGrade}></Review>
+                <Review submitReview={submitReview}></Review>
               ) : (
                 <></>
               )}

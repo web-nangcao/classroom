@@ -19,16 +19,6 @@ import { Controller, useForm } from "react-hook-form";
 
 import reviewStyle from "./Review.module.css";
 
-import axios from "axios";
-
-const axiosApiCall = (url, method, headers = {}) =>
-  axios({
-    method,
-    url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
-    data: {},
-    headers: headers,
-  });
-
 function SimpleDialog(props) {
   const { onClose, selectedValue, open } = props;
 
@@ -42,7 +32,7 @@ function SimpleDialog(props) {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>NỘI DUNG PHÚC KHẢO</DialogTitle>
+      <DialogTitle>Điểm Mới </DialogTitle>
       <FormWithHookForm
         HandleNewGrade={props.HandleNewGrade}
         onClose={onClose}
@@ -72,7 +62,9 @@ export default function ReviewPopUp({ HandleNewGrade }) {
 
   return (
     <div>
-      <Button variant="contained">Chấm Lại</Button>
+      <Button variant="contained" onClick={handleClickOpen}>
+        Chấm Lại
+      </Button>
       <SimpleDialog
         selectedValue={selectedValue}
         open={open}
@@ -86,8 +78,10 @@ export default function ReviewPopUp({ HandleNewGrade }) {
 export const FormWithHookForm = ({ HandleNewGrade, onClose }) => {
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
+    console.log("new grade");
+    // /onClose();
     onClose();
-    HandleNewGrade(data);
+    HandleNewGrade(data.txtGrade);
   };
 
   return (
@@ -104,17 +98,6 @@ export const FormWithHookForm = ({ HandleNewGrade, onClose }) => {
               defaultValue=""
               {...register("txtGrade")}
               onChange={onChange}
-              className={reviewStyle.textField}
-            />
-            <br></br>
-            <TextField
-              required
-              id="outlined-required"
-              label="Lý do: "
-              {...register("txtComment")}
-              defaultValue=""
-              onChange={onChange}
-              multiline
               className={reviewStyle.textField}
             />
             <br></br>

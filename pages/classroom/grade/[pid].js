@@ -51,6 +51,12 @@ export default function StickyHeadTable() {
 
   const router = useRouter();
   const { pid } = router.query;
+  const [listGrade, setListGrade] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRow] = useState([]);
+  const [columns, setColumn] = useState([]);
 
   const access_token = "Bearer " + Cookie.get("accesstoken");
   const headers = { authorization: access_token };
@@ -58,11 +64,27 @@ export default function StickyHeadTable() {
   const { register, handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => {
     console.log(data);
+    console.log("current grade", listGrade);
+    const tempListGrade = listGrade;
+    let index = 0;
+    for (const [key, value] of Object.entries(data)) {
+      if (index === 0) {
+        index++;
+      } else {
+        const _pos = key.search("_");
+        const row = key.slice(0, _pos);
+        const col = key.slice(_pos + 1);
+        tempListGrade[row][columns[col].key] = value;
+        index++;
+      }
+    }
+    console.log("newGrade", tempListGrade);
+    const req = { classroomId: pid, grades: tempListGrade };
     axiosApiCall(
-      `classroom-grade/download-student-list-template/61e3ce15876a79e98d85769e`,
-      "get",
+      `classroom-grade/upload-student-grade-board-ui`,
+      "post",
       headers,
-      []
+      req
     )
       .then((res) => {
         console.log("classroom-grade/download-student-list-template");
@@ -77,11 +99,6 @@ export default function StickyHeadTable() {
         }
       });
   };
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setRow] = useState([]);
-  const [columns, setColumn] = useState([]);
 
   useEffect(() => {
     if (!Cookie.get("accesstoken")) {
@@ -91,7 +108,6 @@ export default function StickyHeadTable() {
     if (!pid) {
       return;
     }
-    console.log("use effect Grade Board");
 
     axiosApiCall(
       `classroom-grade/classroom-grade-detail/${pid}`,
@@ -100,12 +116,9 @@ export default function StickyHeadTable() {
       []
     )
       .then((res) => {
-        console.log(res.data.resValue);
-
         updateData(res);
       })
       .catch(function (error) {
-        console.log("lỗi rồi nè má");
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -124,14 +137,9 @@ export default function StickyHeadTable() {
   };
 
   const handleChange = (event, pos) => {
-    console.log(event.currentTarget.value);
-    console.log(pos);
-
     const position = pos.search("_");
     const row = pos.substring(0, position);
     const col = pos.substring(position + 1);
-    console.log(row);
-    console.log(col);
   };
 
   const handleMenu = (event) => {
@@ -144,7 +152,6 @@ export default function StickyHeadTable() {
 
   const exportFile_SpecGrade = (assignmentID) => {
     setAnchorEl(null);
-    console.log(assignmentID);
     axiosApiCall(
       `classroom-grade/download-student-spec-grade/${pid}/${assignmentID}`,
       "get",
@@ -152,11 +159,9 @@ export default function StickyHeadTable() {
       []
     )
       .then((res) => {
-        console.log(res.data.resValue);
         window.open(res.data.resValue.url);
       })
       .catch(function (error) {
-        console.log("lỗi rồi nè má");
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -166,24 +171,19 @@ export default function StickyHeadTable() {
   };
 
   const mark_assignment_finallized = (assignmentID, is_finallized_var) => {
-    console.log(is_finallized_var);
     const data = {
       classroomId: pid,
       assignmentId: assignmentID,
       is_finallized: !is_finallized_var,
     };
-    console.log(data);
     axiosApiCall(
       `classroom-grade/mark-assignment-finallized`,
       "post",
       headers,
       data
     )
-      .then((res) => {
-        console.log(res.data);
-      })
+      .then((res) => {})
       .catch(function (error) {
-        console.log("lỗi rồi nè má");
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -200,12 +200,9 @@ export default function StickyHeadTable() {
       []
     )
       .then((res) => {
-        console.log("classroom-grade/download-student-list-template");
-        console.log(res.data.resValue);
         window.open(res.data.resValue.url);
       })
       .catch(function (error) {
-        console.log("lỗi rồi nè má");
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -221,11 +218,9 @@ export default function StickyHeadTable() {
       []
     )
       .then((res) => {
-        console.log(res.data.resValue);
         window.open(res.data.resValue.url);
       })
       .catch(function (error) {
-        console.log("lỗi rồi nè má");
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -249,12 +244,9 @@ export default function StickyHeadTable() {
       formData
     )
       .then((res) => {
-        console.log("tra ve");
-        console.log(res.data.resValue);
         updateData(res);
       })
       .catch(function (error) {
-        console.log("lỗi rồi nè má");
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -277,8 +269,6 @@ export default function StickyHeadTable() {
       formData
     )
       .then((res) => {
-        console.log("tra ve");
-
         updateData(res);
       })
       .catch(function (error) {
@@ -293,15 +283,15 @@ export default function StickyHeadTable() {
   function onFileChange(event) {
     // Update the state
     setSelectedFile(event.target.files[0]);
-    console.log(event.target.files[0]);
   }
 
   const updateData = async (res) => {
-    console.log("respone", res.data.resValue);
     let tempCol = [
       { key: "name", id: "" },
       { key: "code", id: "" },
     ];
+
+    setListGrade(res.data.resValue.grades);
     const tempAssignment = res.data.resValue.assignments;
     tempAssignment.forEach((assignmentID) => {
       const assignment = assignmentID.assignmentId;
@@ -313,17 +303,14 @@ export default function StickyHeadTable() {
       tempCol.push(temp);
     });
     setColumn(tempCol);
-    console.log("colums", columns);
 
     const tempRow = [];
     const tempGrade = res.data.resValue.grades;
     tempGrade.forEach((grade) => {
-      console.log("grade", grade);
       tempRow.push(grade);
     });
 
     setRow(tempRow);
-    console.log("row ne", rows);
   };
 
   return (
