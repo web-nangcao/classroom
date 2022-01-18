@@ -33,6 +33,7 @@ import TopBarClassDetail from "../../../../components/topBarClassDetail/topBarCl
 import Comment from "../../../../components/classroom/studentGrade/comment";
 
 import Review from "../../../../components/classroom/studentGrade/review/Review";
+import NewGradePopUp from "../../../../components/classroom/studentGrade/review/newGradePopUp";
 const axiosApiCall = (url, method, headers = {}, data) =>
   axios({
     method,
@@ -69,44 +70,50 @@ export default function StickyHeadTable(props) {
   const [overal, setOveral] = useState(0);
   const { register, handleSubmit, reset, control } = useForm();
   const [currentReview, setCurrentReview] = useState(false);
+  const [userType, setUserType] = useState(Cookie.get("userType"));
+  const [code, setCode] = useState("");
+  const [studentID, setStudentID] = useState("");
+  const [isReviewed, setIsReviewed] = useState(false);
   const onSubmit = (data) => {
-    console.log("hello");
-    console.log(data);
+    if (data.comment !== "") {
+      console.log("hello");
+      console.log(data);
 
-    const access_token = "Bearer " + Cookie.get("accesstoken");
-    const headers = { authorization: access_token };
-    console.log(currentReview.studentReviewId);
-    const req = {
-      studentReviewId: currentReview.studentReviewId,
-      comment: data.comment,
-    };
-    console.log("rew", req);
-    axiosApiCall(`student-review/comment-review`, "post", headers, req)
-      .then((res) => {
-        console.log("student-review/comment-review");
-        console.log(res.data);
-        const review = res.data;
-        let tempReview = false;
-        tempReview = {
-          assignmentId: review.assignmentId._id,
-          classroomId: review.classroomId._id,
-          comments: review.comments.reverse(),
-          is_finallized: review.is_finallized,
-          cur_grade: review.cur_grade,
-          exp_grade: review.exp_grade,
-          explain: review.explain,
-          studentReviewId: review._id,
-        };
-        setCurrentReview(tempReview);
-      })
-      .catch(function (error) {
-        console.log("lỗi");
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
+      const access_token = "Bearer " + Cookie.get("accesstoken");
+      const headers = { authorization: access_token };
+      console.log(currentReview.studentReviewId);
+      const req = {
+        studentReviewId: currentReview.studentReviewId,
+        comment: data.comment,
+      };
+      console.log("rew", req);
+      axiosApiCall(`student-review/comment-review`, "post", headers, req)
+        .then((res) => {
+          console.log("student-review/comment-review");
+          console.log(res.data);
+          const review = res.data;
+          let tempReview = false;
+          tempReview = {
+            assignmentId: review.assignmentId._id,
+            classroomId: review.classroomId._id,
+            comments: review.comments.reverse(),
+            is_finallized: review.is_finallized,
+            cur_grade: review.cur_grade,
+            exp_grade: review.exp_grade,
+            explain: review.explain,
+            studentReviewId: review._id,
+          };
+          setCurrentReview(tempReview);
+        })
+        .catch(function (error) {
+          console.log("lỗi");
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
+    }
   };
   const access_token = "Bearer " + Cookie.get("accesstoken");
   const headers = { authorization: access_token };
@@ -119,73 +126,137 @@ export default function StickyHeadTable(props) {
     if (!pid) {
       return;
     }
-    console.log(props);
-    console.log("use effect Student Review");
+    if (userType == "Student") {
+      setStudentID(JSON.parse(Cookie.get("user"))._id);
+      setCode(Cookie.get("code"));
+      console.log(props);
+      console.log("use effect Student Review");
+      console.log("pid", pid);
 
-    axiosApiCall(
-      `student-review/student-get-reviews/${pid}`,
-      "get",
-      headers,
-      []
-    )
-      .then((res) => {
-        console.log("respone", res.data);
+      axiosApiCall(
+        `student-review/student-get-reviews/${pid}`,
+        "get",
+        headers,
+        []
+      )
+        .then((res) => {
+          console.log("respone hello", res.data);
 
-        res.data.forEach((review) => {
-          if (review.is_finallized == false) {
-            console.log("hi");
-            let tempReview = false;
-            tempReview = {
-              assignmentId: review.assignmentId._id,
-              classroomId: review.classroomId._id,
-              comments: review.comments.reverse(),
-              is_finallized: review.is_finallized,
-              cur_grade: review.cur_grade,
-              exp_grade: review.exp_grade,
-              explain: review.explain,
-              studentReviewId: review._id,
-            };
-            setCurrentReview(tempReview);
-          } else {
-            console.log("hello");
-            return;
+          res.data.forEach((review) => {
+            if (review.is_finallized == false) {
+              console.log("hi");
+              let tempReview = false;
+              tempReview = {
+                assignmentId: review.assignmentId._id,
+                classroomId: review.classroomId._id,
+                comments: review.comments.reverse(),
+                is_finallized: review.is_finallized,
+                cur_grade: review.cur_grade,
+                exp_grade: review.exp_grade,
+                explain: review.explain,
+                studentReviewId: review._id,
+              };
+              setCurrentReview(tempReview);
+              review.classroomId.members.map((member) => {
+                if (member.email == review.studentId.email) {
+                  setCode(member.code);
+                }
+              });
+            } else {
+              console.log("hello");
+              return;
+            }
+          });
+
+          console.log("currentReview", currentReview);
+        })
+        .catch(function (error) {
+          console.log("lỗi rồi nè má");
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
           }
         });
+    } else {
+      console.log("hellos");
+      console.log(props);
+      console.log("use effect Student Review");
+      console.log("pid", pid);
+      setStudentID(props.query.studentId);
 
-        console.log("currentReview", currentReview);
-      })
-      .catch(function (error) {
-        console.log("lỗi rồi nè má");
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
+      axiosApiCall(
+        `student-review/get-review/${pid}/${props.query.assignmentId}/${props.query.studentId}`,
+        "get",
+        headers,
+        []
+      )
+        .then((res) => {
+          console.log("respone hello", res.data);
+
+          res.data.forEach((review) => {
+            if (review.is_finallized == false) {
+              console.log("hi");
+              let tempReview = false;
+              tempReview = {
+                assignmentId: review.assignmentId._id,
+                classroomId: review.classroomId._id,
+                comments: review.comments.reverse(),
+                is_finallized: review.is_finallized,
+                cur_grade: review.cur_grade,
+                exp_grade: review.exp_grade,
+                explain: review.explain,
+                studentReviewId: review._id,
+              };
+              setCurrentReview(tempReview);
+              review.classroomId.members.map((member) => {
+                if (member.email == review.studentId.email) {
+                  setCode(member.code);
+                }
+              });
+            } else {
+              console.log("hello");
+              return;
+            }
+          });
+
+          console.log("currentReview", currentReview);
+        })
+        .catch(function (error) {
+          console.log("lỗi rồi nè má");
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
+    }
   }, [pid]);
 
   const submitReview = (data) => {
-    console.log(data);
-    const req = {
-      classroomId: pid,
-      assignmentId: props.query.assignmentId,
-      cur_grade: props.query.point,
-      exp_grade: data.txtGrade,
-      explain: data.txtComment,
-    };
-    console.log(req);
-    axiosApiCall(`student-review/student-create-review`, "post", headers, req)
-      .then((res) => {
-        updateData(res);
-      })
-      .catch(function (error) {
-        console.log("lỗi rồi nè má");
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
+    if (data.txtComment !== "") {
+      console.log("comment", data.txtComment);
+      const req = {
+        classroomId: pid,
+        assignmentId: props.query.assignmentId,
+        cur_grade: props.query.point,
+        exp_grade: data.txtGrade,
+        explain: data.txtComment,
+      };
+      console.log(req);
+      axiosApiCall(`student-review/student-create-review`, "post", headers, req)
+        .then((res) => {
+          updateData(res);
+        })
+        .catch(function (error) {
+          console.log("lỗi rồi nè má");
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
+    }
   };
 
   const updateData = (res) => {
@@ -201,6 +272,7 @@ export default function StickyHeadTable(props) {
       explain: review.explain,
       studentReviewId: review._id,
     };
+    setCurrentReview(tempReview);
   };
 
   const handleChange = (event, pos) => {
@@ -227,6 +299,79 @@ export default function StickyHeadTable(props) {
   const handleMenuClose = () => {
     setAnchorAdd(null);
   };
+
+  const acceptReview = () => {
+    console.log("chap nhan");
+    const req = {
+      studentReviewId: currentReview.studentReviewId,
+      is_finallized: true,
+      upd_grade: currentReview.exp_grade,
+    };
+    console.log(req);
+    axiosApiCall(`student-review/mark-finallized`, "post", headers, req)
+      .then((res) => {
+        updateData(res);
+        setIsReviewed(true);
+        console.log("respone accept", res.data);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
+  const rejectReview = () => {
+    console.log("tu choin");
+    console.log("chap nhan");
+    const req = {
+      studentReviewId: currentReview.studentReviewId,
+      is_finallized: true,
+      upd_grade: currentReview.cur_grade,
+    };
+    console.log(req);
+    axiosApiCall(`student-review/mark-finallized`, "post", headers, req)
+      .then((res) => {
+        updateData(res);
+        setIsReviewed(true);
+        console.log("respone accept", res.data);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
+  const HandleNewGrade = (newGrade) => {
+    console.log("cham la");
+    console.log("chap nhan");
+    const req = {
+      studentReviewId: currentReview.studentReviewId,
+      is_finallized: true,
+      upd_grade: currentReview.newGrade,
+    };
+    console.log(req);
+    /*axiosApiCall(`student-review/mark-finallized`, "post", headers, req)
+      .then((res) => {
+        updateData(res);
+        setIsReviewed(true);
+        console.log("respone accept", res.data);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });*/
+  };
+
   return (
     <>
       <TopBarClassDetail></TopBarClassDetail>
@@ -241,8 +386,9 @@ export default function StickyHeadTable(props) {
               }}
             >
               <p className={gradeStyle.header}> Phúc Khảo</p>
-              {currentReview === false ? (
-                <Review submitReview={submitReview}></Review>
+              <p className={gradeStyle.info}>MSSV: {code}</p>
+              {currentReview === false && userType === "Student" ? (
+                <Review submitReview={HandleNewGrade}></Review>
               ) : (
                 <></>
               )}
@@ -276,26 +422,34 @@ export default function StickyHeadTable(props) {
               </TableContainer>
             </Paper>
           </div>
-          <div className={gradeStyle.buttonSpace}>
-            <Button
-              variant="contained"
-              color="success"
-              className={gradeStyle.button}
-            >
-              Chấp Nhận
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              className={gradeStyle.button}
-            >
-              Từ Chối
-            </Button>
-            <Button variant="contained" className={gradeStyle.button}>
-              Chấm Lại
-            </Button>
-          </div>
-          {currentReview !== false && (
+          {userType != "Student" &&
+          props.query.point != "**" &&
+          isReviewed === false ? (
+            <div className={gradeStyle.buttonSpace}>
+              <Button
+                variant="contained"
+                color="success"
+                className={gradeStyle.button}
+                onClick={acceptReview}
+              >
+                Chấp Nhận
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                className={gradeStyle.button}
+                onClick={rejectReview}
+              >
+                Từ Chối
+              </Button>
+
+              <NewGradePopUp HandleNewGrade={HandleNewGrade}></NewGradePopUp>
+            </div>
+          ) : (
+            <></>
+          )}
+
+          {currentReview !== false && props.query.point != "**" ? (
             <div className={gradeStyle.userComment}>
               <Grid item container xs={12}>
                 <Grid item xs={1}>
@@ -336,13 +490,15 @@ export default function StickyHeadTable(props) {
                 </Grid>
               </Grid>
             </div>
+          ) : (
+            <></>
           )}
           {currentReview !== false &&
             currentReview.comments.map((comment) => (
               <div className={gradeStyle.comment} key={comment._id}>
                 <Comment
                   content={comment.comment}
-                  personName={comment.user.email}
+                  personName={comment.user._id == studentID ? code : "Teacher"}
                 ></Comment>
               </div>
             ))}

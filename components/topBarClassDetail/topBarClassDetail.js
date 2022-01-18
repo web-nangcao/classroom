@@ -79,17 +79,22 @@ export default function TopBarClassDetail({ id }) {
               </Link>
             )}
           </Grid>
-          <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            {classID !== "" ? (
-              <Link href={`/classroom/assignment/${classID}`}>
-                <a className={topBarClassDetailStyle.menuItem}>Bài Học</a>
-              </Link>
-            ) : (
-              <Link href={`/classroom`}>
-                <a className={topBarClassDetailStyle.menuItem}>Bài Học</a>
-              </Link>
-            )}
-          </Grid>
+          {userType != "Student" ? (
+            <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
+              {classID !== "" ? (
+                <Link href={`/classroom/assignment/${classID}`}>
+                  <a className={topBarClassDetailStyle.menuItem}>Bài Học</a>
+                </Link>
+              ) : (
+                <Link href={`/classroom`}>
+                  <a className={topBarClassDetailStyle.menuItem}>Bài Học</a>
+                </Link>
+              )}
+            </Grid>
+          ) : (
+            <></>
+          )}
+
           {userType == "Student" ? (
             <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
               <Link href={`/classroom/studentGrade/${classID}`}>
@@ -104,7 +109,7 @@ export default function TopBarClassDetail({ id }) {
             </Grid>
           )}
 
-          <Grid item xs={4} className={topBarClassDetailStyle.topBarItem}>
+          <Grid item xs={3} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/classroom/people">
               <a className={topBarClassDetailStyle.menuItem}>Người tham dự</a>
             </Link>

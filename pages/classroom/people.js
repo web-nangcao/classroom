@@ -40,6 +40,7 @@ export default function ClassRoomPage() {
   const [teacherList, setTeacherList] = useState([]);
   const [adminList, setAdminList] = useState([]);
   const [loadingPage, setLoadingPage] = useState(true);
+  const [userType, setUserType] = useState(Cookie.get("userType"));
 
   const handleAddPeolple = (newMember) => {
     console.log("handle add people");
@@ -104,9 +105,14 @@ export default function ClassRoomPage() {
               <link rel="icon" href="/favicon.ico" />
             </Head>
             <TopBarClassDetail></TopBarClassDetail>
-            <AddPeople handleAddPeolple={handleAddPeolple}></AddPeople>
+            {userType != "Student" ? (
+              <AddPeople handleAddPeolple={handleAddPeolple}></AddPeople>
+            ) : (
+              <></>
+            )}
+
             <div className={styles.classContentPeopleContainer}>
-              <h3>Mời người khác tham gia lớp học:</h3>
+              <h3>DANH SÁCH THÀNH VIÊN:</h3>
               <Grid container spacing={2}>
                 <Grid item xs={10}>
                   <h1 style={{ color: "#1967D3" }}>Quản lý</h1>

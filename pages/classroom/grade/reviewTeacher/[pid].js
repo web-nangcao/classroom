@@ -57,11 +57,13 @@ export default function StickyHeadTable() {
   const [rows, setRow] = useState([]);
   const [columns, setColumn] = useState([]);
   const [overal, setOveral] = useState("");
+  const [userType, setUserType] = useState(Cookie.get("userType"));
 
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [listGrade, setListGrade] = useState([]);
+  const [className, setClassName] = useState("");
 
   const [listReview, setListReview] = useState([]);
 
@@ -88,12 +90,24 @@ export default function StickyHeadTable() {
         console.log("ger list review", res.data);
         const listReviewReturn = res.data;
         const tempListReview = [];
+
+        let classroomName = "";
         listReviewReturn.forEach((review) => {
+          let studentcode = "";
+          review.classroomId.members.forEach((member) => {
+            console.log("memberemail", member.email);
+            console.log("eview.studentId", review.studentId.email);
+            if (member.email == review.studentId.email) {
+              console.log("hellosasfsfsdf", member.code);
+              studentcode = member.code;
+            }
+          });
           const temp = {
+            studentId: review.studentId._id,
             classroomId: review.classroomId._id,
             assignmentID: review.assignmentId._id,
             assignmentName: review.assignmentId.name,
-            name: review.studentId.email,
+            code: studentcode,
             currentGrade: review.cur_grade,
             expectGrade: review.exp_grade,
             explain: review.explain,
@@ -101,9 +115,11 @@ export default function StickyHeadTable() {
           };
           tempListReview.push(temp);
           console.log("review ", temp);
+          classroomName = review.classroomId.className;
         });
+        setClassName(classroomName);
 
-        setListReview(tempListReview);
+        setListReview(tempListReview.reverse());
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -165,9 +181,7 @@ export default function StickyHeadTable() {
               <Grid>
                 <p className={gradeStyle.info}>
                   Môn học:{" "}
-                  <span className={gradeStyle.className}>
-                    Lập Trình ReactJs
-                  </span>
+                  <span className={gradeStyle.className}>{className}</span>
                 </p>
               </Grid>
             </Grid>
@@ -184,15 +198,15 @@ export default function StickyHeadTable() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {listReview.map((review) => (
+                  {listReview.reverse().map((review, pos) => (
                     <TableRow
-                      key={review.assignmentID}
+                      key={review.assignmentID + pos}
                       sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
                       }}
                     >
                       <TableCell component="th" scope="row">
-                        {review.name}
+                        {review.code}
                       </TableCell>
                       <TableCell>{review.assignmentName}</TableCell>
 
@@ -207,6 +221,7 @@ export default function StickyHeadTable() {
                               name: review.assignmentName,
                               point: review.currentGrade,
                               is_finallized: review.is_finallized,
+                              studentId: review.studentId,
                             },
                           }}
                         >

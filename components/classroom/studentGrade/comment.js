@@ -8,7 +8,6 @@ import TextField from "@mui/material/TextField";
 import commentStyle from "./comment.module.css";
 
 export default function Comment({ content, personName }) {
-  const { handleSubmit, reset, control } = useForm();
   const onSubmit = (data) => console.log(data);
   return (
     <>

@@ -84,25 +84,29 @@ export default function ClassRoomPage({ listClassTest }) {
     //console.log(newClass);
     const access_token = "Bearer " + Cookie.get("accesstoken");
     const headers = { authorization: access_token };
+    if (newClass.txtClassName !== "" && newClass.txtTopic !== "") {
+      const data = {
+        className: newClass.txtClassName,
+        topic: newClass.txtTopic,
+      };
 
-    const data = { className: newClass.txtClassName, topic: newClass.txtTopic };
-
-    axiosApiCall("create", "post", headers, data)
-      .then((res) => {
-        console.log("response:");
-        //console.log(res.data.resValue);
-        const newClassList = JSON.parse(JSON.stringify(listClass));
-        newClassList.push(res.data.resValue.classroom);
-        setlistClass(newClassList);
-        //console.log(newClassList);
-      })
-      .catch(function (error) {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
+      axiosApiCall("create", "post", headers, data)
+        .then((res) => {
+          console.log("response:");
+          //console.log(res.data.resValue);
+          const newClassList = JSON.parse(JSON.stringify(listClass));
+          newClassList.push(res.data.resValue.classroom);
+          setlistClass(newClassList);
+          //console.log(newClassList);
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
+    }
   };
   return (
     <Layout>
