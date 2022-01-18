@@ -59,7 +59,7 @@ export default function ForgotPassword() {
         let check = validate(data.get('email'));
 
         if (check === true) {
-            axiosApiCall("auth/google-token", "post", { email_forgot })
+            axiosApiCall("user/renew-password", "post", email_forgot)
                 .then((res) => {
                     let data = res.data;
                     if (data.success) {
@@ -99,35 +99,7 @@ export default function ForgotPassword() {
 
     }
 
-    const handleRegister = function () {
-
-        axiosApiCall("auth/google-token", "post", { access_token })
-            .then((res) => {
-
-                if (res.success) {
-                    console.log("hi");
-                    Cookie.set("user", JSON.stringify(res.data.user));
-                    Cookie.set("accesstoken", res.data.access_token);
-
-                    console.log(res.data.access_token);
-
-                    console.log("prepath: " + Cookie.get("prePath"));
-                    Cookie.get("prePath")
-                        ? router.push(Cookie.get("prePath"))
-                        : router.push("/");
-                } else {
-
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                }
-            });
-    };
+   
 
     const paperStyle = {
         padding: 20,

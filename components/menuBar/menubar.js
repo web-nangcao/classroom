@@ -23,7 +23,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function MenuBar() {
   return (
     <Box sx={{ flexGrow: 1 }} className={menuBarStyle.menuBar}>
-      <Grid container spacing={2}>
+      {/* <Grid container spacing={2}>
         <Grid item>
           <Button variant="outlined" startIcon={<AssignmentIcon />}>
             To do
@@ -40,7 +40,7 @@ export default function MenuBar() {
           </Button>{" "}
         </Grid>{" "}
         <Grid item> </Grid>{" "}
-      </Grid>{" "}
+      </Grid>{" "} */}
     </Box>
   );
 }

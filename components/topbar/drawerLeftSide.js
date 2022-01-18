@@ -63,7 +63,7 @@ export default function TemporaryDrawer() {
 
   return (
     <div>
-      {["left"].map((anchor) => (
+      {/* {["left"].map((anchor) => (
         <React.Fragment key={anchor}>
           <Button onClick={toggleDrawer(anchor, true)}>
             <ReorderIcon></ReorderIcon>
@@ -76,7 +76,7 @@ export default function TemporaryDrawer() {
             {list(anchor)}
           </Drawer>
         </React.Fragment>
-      ))}
+      ))} */}
     </div>
   );
 }

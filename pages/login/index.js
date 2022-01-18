@@ -23,9 +23,6 @@ const axiosApiCall = (url, method, body = {}) =>
   axios({
     method,
     url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
-
-    // test
-    //url: `http://localhost:2000/api/register`,
     data: body,
   });
 
@@ -48,7 +45,7 @@ export default function Login() {
   console.log("access token ", access_token);
   console.log("env - test", config.env.GOOGLE_CLIENT_ID);
   if (access_token !== undefined) {
-    router.push("/");
+    router.push("/classroom");
   }
 
   const handleSubmit = (event) => {
@@ -58,25 +55,32 @@ export default function Login() {
 
     let check = validate(data.get("email"), data.get("password"));
 
+    const dataPost = {
+      email: data.get("email"),
+      password: data.get("password")
+    }
     if (check === true) {
-      axiosApiCall("auth/google-token", "post", { access_token })
+      axiosApiCall("auth/local-login/", "post", dataPost)
         .then((res) => {
+          console.log(res);
           let data = res.data;
-          if (data.success) {
+          if (data.access_token) {
             Cookie.set("user", JSON.stringify(res.data.user));
             Cookie.set("accesstoken", res.data.access_token);
-
-            console.log(res.data.access_token);
 
             console.log("prepath: " + Cookie.get("prePath"));
             Cookie.get("prePath")
               ? router.push(Cookie.get("prePath"))
-              : router.push("/");
+              : router.push("/classroom");
           }
 
-          if (data.error) {
-            setError(data.error);
+          if(data =="Tai khoan chua duoc kich hoat"){
+            setError("Account is not activated. Please check your email!")
           }
+          if(data =="Mat khau khong dung" || data == "Email khong ton tai" ){
+            setError("Wrong email or password")
+          }
+         
         })
         .catch(function (error) {
           console.log(error);
@@ -106,7 +110,7 @@ export default function Login() {
         console.log("prepath: " + Cookie.get("prePath"));
         Cookie.get("prePath")
           ? router.push(Cookie.get("prePath"))
-          : router.push("/");
+          : router.push("/classroom");
       })
       .catch(function (error) {
         console.log(error);

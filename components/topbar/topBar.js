@@ -8,7 +8,9 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 
 import AddIcon from "@mui/icons-material/Add";
-import DialpadIcon from "@mui/icons-material/Dialpad";
+
+import NotificationsIcon from '@mui/icons-material/Notifications';
+
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import Link from "next/link";
@@ -105,7 +107,7 @@ export default function TopBar({ handleAddClass }) {
               </IconButton>
             </Grid>
             <Grid item xs={0.5} className={topBarStyle.topBarItem}>
-              <DialpadIcon></DialpadIcon>
+              <NotificationsIcon></NotificationsIcon>
             </Grid>
             <Grid item xs={0.5} className={topBarStyle.topBarItem}>
               <Link href="/profile">
