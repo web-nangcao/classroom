@@ -80,6 +80,9 @@ export default function Login() {
           if(data =="Mat khau khong dung" || data == "Email khong ton tai" ){
             setError("Wrong email or password")
           }
+          if(data =="Tai khoan nay da bi khoa" ){
+            setError("Account is locked")
+          }
          
         })
         .catch(function (error) {
