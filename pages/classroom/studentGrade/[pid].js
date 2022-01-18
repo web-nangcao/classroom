@@ -238,7 +238,19 @@ export default function StickyHeadTable() {
                       </TableCell>
 
                       <TableCell align="right">
-                        <Link href={`/classroom/studentGrade/review/${pid}`}>
+                        <Link
+                          href={{
+                            pathname: `/classroom/studentGrade/review/${pid}`,
+                            query: {
+                              assignmentId: assignment._id,
+                              name: assignment.name,
+                              point: assignment.is_finallized
+                                ? listGrade[assignment.name]
+                                : "**",
+                              is_finallized: assignment.is_finallized,
+                            },
+                          }}
+                        >
                           <a>
                             <HelpOutlineIcon color="secondary" />
                           </a>

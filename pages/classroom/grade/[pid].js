@@ -164,14 +164,14 @@ export default function StickyHeadTable() {
       });
   };
 
-  const mark_assignment_finallized = (assignmentID, is_finallized) => {
-    console.log(assignmentID);
+  const mark_assignment_finallized = (assignmentID, is_finallized_var) => {
+    console.log(is_finallized_var);
     const data = {
       classroomId: pid,
       assignmentId: assignmentID,
-      is_finallized: !is_finallized,
+      is_finallized: !is_finallized_var,
     };
-    console.log(assignmentID);
+    console.log(data);
     axiosApiCall(
       `classroom-grade/mark-assignment-finallized`,
       "post",
@@ -304,7 +304,11 @@ export default function StickyHeadTable() {
     const tempAssignment = res.data.resValue.assignments;
     tempAssignment.forEach((assignmentID) => {
       const assignment = assignmentID.assignmentId;
-      let temp = { key: `${assignment.name}`, id: `${assignment._id}` };
+      let temp = {
+        key: `${assignment.name}`,
+        id: `${assignment._id}`,
+        is_finallized: assignmentID.is_finallized,
+      };
       tempCol.push(temp);
     });
     setColumn(tempCol);
@@ -358,61 +362,6 @@ export default function StickyHeadTable() {
                                 <span className={gradeStyle.headerLabel}>
                                   {column.key}
                                 </span>
-                                {/* <span className={gradeStyle.moreOption}>
-                                  <Button
-                                    size="large"
-                                    aria-label="account of current user"
-                                    aria-controls="menu-appbar"
-                                    aria-haspopup="true"
-                                    onClick={handleMenu}
-                                    color="inherit"
-                                  >
-                                    <ArrowDropDownIcon />
-                                  </Button>
-                                  {/* <Menu
-                                    id={`actions-${column.id}`}
-                                    anchorEl={anchorEl}
-                                    anchorOrigin={{
-                                      vertical: "top",
-                                      horizontal: "right",
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                      vertical: "top",
-                                      horizontal: "right",
-                                    }}
-                                    open={Boolean(anchorEl)}
-                                    onClose={handleClose}
-                                  >
-                                    <MenuItem
-                                      onClick={(e) =>
-                                        mark_assignment_finallized(
-                                          e.target.getAttribute("data-id")
-                                        )
-                                      }
-                                      data-id={column.id}
-                                    >
-                                      {column.id}
-                                    </MenuItem>
-                                    <MenuItem
-                                      onClick={() =>
-                                        exportFile_SpecGrade(column.id)
-                                      }
-                                    >
-                                      Export file
-                                    </MenuItem>
-                                    <MenuItem onClick={handleClose}>
-                                      Import file
-                                    </MenuItem>
-                                  </Menu> }
-                                  <MenuList
-                                    id={column.id}
-                                    mark_assignment_finallized={
-                                      mark_assignment_finallized
-                                    }
-                                    exportFile_SpecGrade={exportFile_SpecGrade}
-                                  ></MenuList>
-                                </span> */}
                                 <MenuList
                                   id={column.id}
                                   mark_assignment_finallized={
@@ -420,6 +369,7 @@ export default function StickyHeadTable() {
                                   }
                                   exportFile_SpecGrade={exportFile_SpecGrade}
                                   classStyle={gradeStyle.moreOption}
+                                  is_finallized={column.is_finallized}
                                 ></MenuList>
                               </TableCell>
                             )

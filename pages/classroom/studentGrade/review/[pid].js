@@ -32,6 +32,7 @@ import axios from "axios";
 import TopBarClassDetail from "../../../../components/topBarClassDetail/topBarClassDetail";
 import Comment from "../../../../components/classroom/studentGrade/comment";
 
+import Review from "../../../../components/classroom/studentGrade/review/Review";
 const axiosApiCall = (url, method, headers = {}, data) =>
   axios({
     method,
@@ -73,7 +74,19 @@ const data = [
   },
 ];
 
-export default function StickyHeadTable() {
+export async function getServerSideProps(context) {
+  console.log(context.query);
+  // returns { id: episode.itunes.episode, title: episode.title}
+
+  //you can make DB queries using the data in context.query
+  return {
+    props: {
+      query: context.query, //pass it to the page props
+    },
+  };
+}
+
+export default function StickyHeadTable(props) {
   const router = useRouter();
   const { pid } = router.query;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -89,8 +102,8 @@ export default function StickyHeadTable() {
     const access_token = "Bearer " + Cookie.get("accesstoken");
     const headers = { authorization: access_token };
     axiosApiCall(
-      `classroom-grade/download-student-list-template/61bca5ded81f63a8b22568d8`,
-      "get",
+      `student-reviewe/comment-review`,
+      "post",
       headers,
       []
     )
@@ -107,6 +120,8 @@ export default function StickyHeadTable() {
         }
       });
   };
+  const access_token = "Bearer " + Cookie.get("accesstoken");
+  const headers = { authorization: access_token };
 
   useEffect(() => {
     if (!Cookie.get("accesstoken")) {
@@ -116,28 +131,50 @@ export default function StickyHeadTable() {
     if (!pid) {
       return;
     }
+    console.log(props);
     console.log("use effect Student Review");
-    let Col = Object.keys(data[0]);
-    //Col.push("Tong ket");
-    setColumn(Col);
-    setRow(data);
 
-    let sumPoint = 0;
-    let sumRate = 0;
-    data.forEach((assignment) => {
-      sumPoint += parseInt(assignment.point) * parseInt(assignment.rate);
-      sumRate += parseInt(assignment.rate);
-    });
-    setOveral(parseInt(sumPoint / sumRate));
+    axiosApiCall(
+      `student-review/student-get-reviews/${pid}`,
+      "get",
+      headers,
+      []
+    )
+      .then((res) => {
+        console.log("respone", res.data);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
   }, [pid]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  const submitReview = (data) => {
+    console.log(data);
+    const req = {
+      classroomId: pid,
+      assignmentId: props.query.assignmentId,
+      cur_grade: props.query.point,
+      exp_grade: data.txtGrade,
+      explain: data.txtComment,
+    };
+    console.log(req);
+    axiosApiCall(`student-review/student-create-review`, "post", headers, req)
+      .then((res) => {
+        console.log("respone", res.data);
+      })
+      .catch(function (error) {
+        console.log("lỗi rồi nè má");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
   };
 
   const handleChange = (event, pos) => {
@@ -158,6 +195,12 @@ export default function StickyHeadTable() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleProfileMenuOpen = (event) => {
+    setAnchorAdd(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorAdd(null);
+  };
   return (
     <>
       <TopBarClassDetail></TopBarClassDetail>
@@ -172,6 +215,7 @@ export default function StickyHeadTable() {
               }}
             >
               <p className={gradeStyle.header}> Phúc Khảo</p>
+              <Review submitReview={submitReview}></Review>
               <TableContainer
                 component={Paper}
                 className={gradeStyle.gradeBoard}
@@ -187,10 +231,10 @@ export default function StickyHeadTable() {
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        Cuối kỳ
+                        {props.query.name}
                       </TableCell>
                       <TableCell component="th" scope="row" align="right">
-                        90
+                        {props.query.point}
                       </TableCell>
                       <TableCell align="right" align="right">
                         100
