@@ -45,7 +45,7 @@ export default function Login() {
   console.log("access token ", access_token);
   console.log("env - test", config.env.GOOGLE_CLIENT_ID);
   if (access_token !== undefined) {
-    router.push("/");
+    router.push("/classroom");
   }
 
   const handleSubmit = (event) => {
@@ -71,7 +71,7 @@ export default function Login() {
             console.log("prepath: " + Cookie.get("prePath"));
             Cookie.get("prePath")
               ? router.push(Cookie.get("prePath"))
-              : router.push("/");
+              : router.push("/classroom");
           }
 
           if(data =="Tai khoan chua duoc kich hoat"){
@@ -110,7 +110,7 @@ export default function Login() {
         console.log("prepath: " + Cookie.get("prePath"));
         Cookie.get("prePath")
           ? router.push(Cookie.get("prePath"))
-          : router.push("/");
+          : router.push("/classroom");
       })
       .catch(function (error) {
         console.log(error);
