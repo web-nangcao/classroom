@@ -59,7 +59,7 @@ export default function TopBarClassDetail({ id }) {
       >
         <Grid container spacing={2}>
           <Grid item xs={1} className={topBarClassDetailStyle.topBarItem}>
-            <DrawerLeftSide> </DrawerLeftSide>
+            {/* <DrawerLeftSide> </DrawerLeftSide> */}
           </Grid>
           <Grid item xs={3} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/classroom">
@@ -116,7 +116,7 @@ export default function TopBarClassDetail({ id }) {
           </Grid>
 
           <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
-            <DialpadIcon> </DialpadIcon>
+            {/* <DialpadIcon> </DialpadIcon> */}
           </Grid>
           <Grid item xs={0.5} className={topBarClassDetailStyle.topBarItem}>
             <Link href="/profile">

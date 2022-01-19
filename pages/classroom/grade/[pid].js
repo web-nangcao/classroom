@@ -8,6 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
+import Input from '@mui/material/Input';
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -32,6 +33,12 @@ import Cookie from "js-cookie";
 
 import axios from "axios";
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Alert from '@mui/material/Alert';
+
 const axiosApiCall = (url, method, headers = {}, data) =>
   axios({
     method,
@@ -46,6 +53,11 @@ function createData(name, code, population, size) {
 }
 
 export default function StickyHeadTable() {
+
+  const [open, setOpen] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+
+
   const [selectedFile, setSelectedFile] = useState([]);
   const [files, setfiles] = useState([]);
 
@@ -98,6 +110,9 @@ export default function StickyHeadTable() {
           console.log(error.response.headers);
         }
       });
+
+    setOpen(true)
+    setSuccess("Lưu điểm thành công")
   };
 
   useEffect(() => {
@@ -182,7 +197,7 @@ export default function StickyHeadTable() {
       headers,
       data
     )
-      .then((res) => {})
+      .then((res) => { })
       .catch(function (error) {
         if (error.response) {
           console.log(error.response.data);
@@ -190,6 +205,30 @@ export default function StickyHeadTable() {
           console.log(error.response.headers);
         }
       });
+
+    // test
+
+    const data_post_noti = {
+      classroomId: pid,
+      notificationType: "teacher_reply_review",
+      content: "Giáo viên vừa mới đăng điểm số",
+    };
+    axiosApiCall(
+      `notification/create`,
+      "post",
+      headers,
+      data_post_noti
+    )
+      .then((res) => { })
+      .catch(function (error) {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+    setSuccess("Finalized điểm thành công")
+    setOpen(true);
   };
 
   const downloadTemplate = () => {
@@ -253,6 +292,14 @@ export default function StickyHeadTable() {
           console.log(error.response.headers);
         }
       });
+
+    setSuccess("Nhập danh sách sinh viên thành công");
+    setOpen(true);
+  };
+
+
+  const handleCloseDialog = () => {
+    setOpen(false);
   };
   const importGradeBoard = () => {
     const formData = new FormData();
@@ -279,6 +326,8 @@ export default function StickyHeadTable() {
           console.log(error.response.headers);
         }
       });
+    setSuccess("Nhập bảng điểm thành công")
+    setOpen(true);
   };
   function onFileChange(event) {
     // Update the state
@@ -318,202 +367,241 @@ export default function StickyHeadTable() {
       <TopBarClassDetail></TopBarClassDetail>
       <div className={gradeStyle.container}>
         <Paper sx={{ width: "80%", overflow: "hidden" }}>
-          <Grid container>
-            <Grid item xs={8}></Grid>
-            <Grid item xs={4}>
-              <Link
-                href={{
-                  pathname: `/classroom/grade/reviewTeacher/${pid}`,
-                  query: {
-                    /*assignmentId: assignment._id,
-                    name: assignment.name,
-                    point: assignment.is_finallized
-                      ? listGrade[assignment.name]
-                      : "**",
-                    is_finallized: assignment.is_finallized,*/
-                  },
-                }}
+          <Grid
+            container
+          >
+            <Grid container xs={6}
+              justifyContent="flex-end">
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleSubmit(onSubmit)}
+                className={gradeStyle.button}
+                style={{ minWidth: '200px' }}
               >
-                <a>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    className={gradeStyle.button}
-                  >
-                    Xem Yêu Cầu Phúc Khảo
-                  </Button>
-                </a>
-              </Link>
+                Lưu điểm
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                color="error"
+                className={gradeStyle.button}
+              >
+                <Link
+                  href={{
+                    pathname: `/classroom/grade/reviewTeacher/${pid}`,
+                    query: {
+                      /*assignmentId: assignment._id,
+                      name: assignment.name,
+                      point: assignment.is_finallized
+                        ? listGrade[assignment.name]
+                        : "**",
+                      is_finallized: assignment.is_finallized,*/
+                    },
+                  }}
+                > Xem Yêu Cầu Phúc Khảo</Link>
+
+              </Button>
             </Grid>
           </Grid>
-          <form>
-            <Controller
-              name={"textValue"}
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <div>
-                  <TableContainer>
-                    <Table
-                      stickyHeader
-                      aria-label="sticky table"
-                      style={{ borderCollapse: "collapse" }}
-                    >
-                      <TableHead className={gradeStyle.tableHead}>
-                        <TableRow>
-                          {columns.map((column, posCol) =>
-                            posCol == 0 || posCol == 1 ? (
-                              <TableCell
-                                key={posCol}
-                                className={gradeStyle.headerName}
-                              >
-                                <span className={gradeStyle.headerLabel}>
-                                  {studentInfor[posCol]}
-                                </span>
-                              </TableCell>
-                            ) : (
-                              <TableCell
-                                key={posCol}
-                                className={gradeStyle.header}
-                              >
-                                <span className={gradeStyle.headerLabel}>
-                                  {column.key}
-                                </span>
-                                <MenuList
-                                  id={column.id}
-                                  mark_assignment_finallized={
-                                    mark_assignment_finallized
-                                  }
-                                  exportFile_SpecGrade={exportFile_SpecGrade}
-                                  classStyle={gradeStyle.moreOption}
-                                  is_finallized={column.is_finallized}
-                                ></MenuList>
-                              </TableCell>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justifyContent="center">
+            <form>
+              <Controller
+                name={"textValue"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <div>
+                    <TableContainer>
+                      <Table
+                        stickyHeader
+                        aria-label="sticky table"
+                        style={{ borderCollapse: "collapse" }}
+                      >
+                        <TableHead className={gradeStyle.tableHead}>
+                          <TableRow>
+                            {columns.map((column, posCol) =>
+                              posCol == 0 || posCol == 1 ? (
+                                <TableCell
+                                  key={posCol}
+                                  className={gradeStyle.headerName}
+                                >
+                                  <span className={gradeStyle.headerLabel}>
+                                    {studentInfor[posCol]}
+                                  </span>
+                                </TableCell>
+                              ) : (
+                                <TableCell
+                                  key={posCol}
+                                  className={gradeStyle.header}
+                                >
+                                  <span className={gradeStyle.headerLabel} style={{ padding: "10px" }}>
+                                    {column.key}
+                                  </span>
+                                  <MenuList
+                                    id={column.id}
+                                    mark_assignment_finallized={
+                                      mark_assignment_finallized
+                                    }
+                                    exportFile_SpecGrade={exportFile_SpecGrade}
+                                    classStyle={gradeStyle.moreOption}
+                                    is_finallized={column.is_finallized}
+                                  ></MenuList>
+                                </TableCell>
+                              )
+                            )}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {rows
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
                             )
-                          )}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {rows
-                          .slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                          .map((row, posRow) => {
-                            return (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={posRow}
-                                style={{ height: "auto !important" }}
-                              >
-                                {columns.map((column, posCol) => {
-                                  const value = row[column.key];
-                                  const pos = posRow + "_" + posCol;
+                            .map((row, posRow) => {
+                              return (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={posRow}
+                                  style={{ height: "auto !important" }}
+                                >
+                                  {columns.map((column, posCol) => {
+                                    const value = row[column.key];
+                                    const pos = posRow + "_" + posCol;
 
-                                  return posCol == 0 || posCol == 1 ? (
-                                    <TableCell
-                                      key={pos}
-                                      className={gradeStyle.name}
-                                      sx={{ m: 1, width: "150px" }}
-                                    >
-                                      {value}
-                                    </TableCell>
-                                  ) : (
-                                    <TableCell
-                                      key={pos}
-                                      className={gradeStyle.grade}
-                                    >
-                                      <OutlinedInput
-                                        type="number"
-                                        sx={{ m: 1, width: "130px" }}
-                                        id="outlined-adornment-weight"
-                                        defaultValue={value}
-                                        {...register(`${pos}`)}
-                                        //onChange={onChange}
-                                        onChange={(e) => handleChange(e, pos)}
-                                        endAdornment={
-                                          <InputAdornment
-                                            position="end"
-                                            className={gradeStyle.gradeMaxText}
-                                          >
-                                            /100
-                                          </InputAdornment>
-                                        }
-                                        aria-describedby="outlined-weight-helper-text"
-                                        inputProps={{
-                                          "aria-label": "weight",
-                                        }}
-                                      />
-                                    </TableCell>
-                                  );
-                                })}
-                              </TableRow>
-                            );
-                          })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                </div>
-              )}
-            />
-          </form>
+                                    return posCol == 0 || posCol == 1 ? (
+                                      <TableCell
+                                        key={pos}
+                                        className={gradeStyle.name}
+                                        sx={{ m: 1, width: "150px" }}
+                                      >
+                                        {value}
+                                      </TableCell>
+                                    ) : (
+                                      <TableCell
+                                        key={pos}
+                                        className={gradeStyle.grade}
+                                      >
+                                        <OutlinedInput
+                                          type="number"
+                                          sx={{ m: 1, width: "130px" }}
+                                          id="outlined-adornment-weight"
+                                          defaultValue={value}
+                                          {...register(`${pos}`)}
+                                          //onChange={onChange}
+                                          onChange={(e) => handleChange(e, pos)}
+                                          endAdornment={
+                                            <InputAdornment
+                                              position="end"
+                                              className={gradeStyle.gradeMaxText}
+                                            >
+                                              /100
+                                            </InputAdornment>
+                                          }
+                                          aria-describedby="outlined-weight-helper-text"
+                                          inputProps={{
+                                            "aria-label": "weight",
+                                          }}
+                                        />
+                                      </TableCell>
+                                    );
+                                  })}
+                                </TableRow>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    <TablePagination
+                      rowsPerPageOptions={[10, 25, 100]}
+                      component="div"
+                      count={rows.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </div>
+                )}
+              />
+            </form>
+          </Grid>
         </Paper>
       </div>
-      <div>
-        <input type="file" onChange={onFileChange} />
-      </div>
-      <FileData selectedFile={selectedFile} />
-      <div>
+      <Grid container
+        alignItems="center"
+        justifyContent="center">
+
         <Button
+          sx={{ mr: 2 }}
           variant="contained"
-          color="success"
-          onClick={handleSubmit(onSubmit)}
-          className={gradeStyle.button}
+          component="label"
         >
-          Lưu điểm
+          Upload File
+          <input type="file" hidden onChange={onFileChange} accept=".csv" />
         </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          className={gradeStyle.button}
-          onClick={downloadTemplate}
-        >
-          Download Template
-        </Button>
-        <Button
-          variant="contained"
-          className={gradeStyle.button}
-          onClick={importStudent}
-        >
-          Import Sinh Viên
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          className={gradeStyle.button}
-          onClick={downloadGradeBoard}
-        >
-          Export Bảng Điểm
-        </Button>
-        <Button
-          variant="contained"
-          color="warning"
-          className={gradeStyle.button}
-          onClick={importGradeBoard}
-        >
-          Import Bảng Điểm
-        </Button>
-      </div>
+        <FileData selectedFile={selectedFile} />
+      </Grid>
+
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="center">
+        <Grid item xs={3}>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={gradeStyle.button}
+            onClick={downloadTemplate}
+          >
+            Download Template
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button
+            variant="contained"
+            className={gradeStyle.button}
+            onClick={importStudent}
+          >
+            Import Sinh Viên
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button
+            variant="contained"
+            color="error"
+            className={gradeStyle.button}
+            onClick={downloadGradeBoard}
+          >
+            Export Bảng Điểm
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button
+            variant="contained"
+            color="warning"
+            className={gradeStyle.button}
+            onClick={importGradeBoard}
+          >
+            Import Bảng Điểm
+          </Button>
+        </Grid>
+      </Grid>
+      <Dialog open={open} onClose={handleCloseDialog}>
+        <DialogTitle>Thông báo</DialogTitle>
+        <DialogContent>
+          <Alert severity="success">{success}</Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
