@@ -8,7 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import Input from '@mui/material/Input';
+import Input from "@mui/material/Input";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -33,11 +33,11 @@ import Cookie from "js-cookie";
 
 import axios from "axios";
 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Alert from '@mui/material/Alert';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Alert from "@mui/material/Alert";
 
 const axiosApiCall = (url, method, headers = {}, data) =>
   axios({
@@ -53,10 +53,8 @@ function createData(name, code, population, size) {
 }
 
 export default function StickyHeadTable() {
-
   const [open, setOpen] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-
 
   const [selectedFile, setSelectedFile] = useState([]);
   const [files, setfiles] = useState([]);
@@ -79,6 +77,7 @@ export default function StickyHeadTable() {
     console.log("current grade", listGrade);
     const tempListGrade = listGrade;
     let index = 0;
+    let checkValidate = true;
     for (const [key, value] of Object.entries(data)) {
       if (index === 0) {
         index++;
@@ -86,33 +85,41 @@ export default function StickyHeadTable() {
         const _pos = key.search("_");
         const row = key.slice(0, _pos);
         const col = key.slice(_pos + 1);
+        if (parseInt(value) < 0 || parseInt(value) > 100) {
+          checkValidate = false;
+        }
         tempListGrade[row][columns[col].key] = value;
         index++;
       }
     }
-    console.log("newGrade", tempListGrade);
-    const req = { classroomId: pid, grades: tempListGrade };
-    axiosApiCall(
-      `classroom-grade/upload-student-grade-board-ui`,
-      "post",
-      headers,
-      req
-    )
-      .then((res) => {
-        console.log("classroom-grade/download-student-list-template");
-        console.log(res.data.resValue);
-      })
-      .catch(function (error) {
-        console.log("lỗi rồi nè má");
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
+    if (checkValidate == true) {
+      console.log("newGrade", tempListGrade);
+      const req = { classroomId: pid, grades: tempListGrade };
+      axiosApiCall(
+        `classroom-grade/upload-student-grade-board-ui`,
+        "post",
+        headers,
+        req
+      )
+        .then((res) => {
+          console.log("classroom-grade/download-student-list-template");
+          console.log(res.data.resValue);
+        })
+        .catch(function (error) {
+          console.log("lỗi rồi nè má");
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        });
 
-    setOpen(true)
-    setSuccess("Lưu điểm thành công")
+      setOpen(true);
+      setSuccess("Lưu điểm thành công");
+    } else {
+      setOpen(true);
+      setSuccess("Dữ liệu không đúng");
+    }
   };
 
   useEffect(() => {
@@ -184,6 +191,36 @@ export default function StickyHeadTable() {
         }
       });
   };
+  const importFile_SpecGrade = (assignmentID) => {
+    setAnchorEl(null);
+    console.log("hello");
+    const formData = new FormData();
+
+    // Update the formData object
+    formData.append("file", selectedFile, selectedFile.name);
+    console.log("toi day roi ne");
+    axiosApiCall(
+      `classroom-grade/upload-student-spec-grade/${pid}/${assignmentID}`,
+      "post",
+      headers,
+      formData
+    )
+      .then((res) => {
+        //updateData(res);
+        console.log(res.data);
+        console.log("hell");
+        setOpen(true);
+        setSuccess("Import thành công, load lại trang!");
+      })
+      .catch(function (error) {
+        console.log("lối");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  };
 
   const mark_assignment_finallized = (assignmentID, is_finallized_var) => {
     const data = {
@@ -197,7 +234,7 @@ export default function StickyHeadTable() {
       headers,
       data
     )
-      .then((res) => { })
+      .then((res) => {})
       .catch(function (error) {
         if (error.response) {
           console.log(error.response.data);
@@ -213,13 +250,8 @@ export default function StickyHeadTable() {
       notificationType: "teacher_reply_review",
       content: "Giáo viên vừa mới đăng điểm số",
     };
-    axiosApiCall(
-      `notification/create`,
-      "post",
-      headers,
-      data_post_noti
-    )
-      .then((res) => { })
+    axiosApiCall(`notification/create`, "post", headers, data_post_noti)
+      .then((res) => {})
       .catch(function (error) {
         if (error.response) {
           console.log(error.response.data);
@@ -227,7 +259,7 @@ export default function StickyHeadTable() {
           console.log(error.response.headers);
         }
       });
-    setSuccess("Finalized điểm thành công")
+    setSuccess("Finalized điểm thành công");
     setOpen(true);
   };
 
@@ -297,7 +329,6 @@ export default function StickyHeadTable() {
     setOpen(true);
   };
 
-
   const handleCloseDialog = () => {
     setOpen(false);
   };
@@ -326,7 +357,7 @@ export default function StickyHeadTable() {
           console.log(error.response.headers);
         }
       });
-    setSuccess("Nhập bảng điểm thành công")
+    setSuccess("Nhập bảng điểm thành công");
     setOpen(true);
   };
   function onFileChange(event) {
@@ -367,17 +398,14 @@ export default function StickyHeadTable() {
       <TopBarClassDetail></TopBarClassDetail>
       <div className={gradeStyle.container}>
         <Paper sx={{ width: "80%", overflow: "hidden" }}>
-          <Grid
-            container
-          >
-            <Grid container xs={6}
-              justifyContent="flex-end">
+          <Grid container>
+            <Grid container xs={6} justifyContent="flex-end">
               <Button
                 variant="contained"
                 color="success"
                 onClick={handleSubmit(onSubmit)}
                 className={gradeStyle.button}
-                style={{ minWidth: '200px' }}
+                style={{ minWidth: "200px" }}
               >
                 Lưu điểm
               </Button>
@@ -400,8 +428,9 @@ export default function StickyHeadTable() {
                       is_finallized: assignment.is_finallized,*/
                     },
                   }}
-                > Xem Yêu Cầu Phúc Khảo</Link>
-
+                >
+                  Xem Yêu Cầu Phúc Khảo
+                </Link>
               </Button>
             </Grid>
           </Grid>
@@ -409,7 +438,8 @@ export default function StickyHeadTable() {
             container
             direction="column"
             alignItems="center"
-            justifyContent="center">
+            justifyContent="center"
+          >
             <form>
               <Controller
                 name={"textValue"}
@@ -439,7 +469,10 @@ export default function StickyHeadTable() {
                                   key={posCol}
                                   className={gradeStyle.header}
                                 >
-                                  <span className={gradeStyle.headerLabel} style={{ padding: "10px" }}>
+                                  <span
+                                    className={gradeStyle.headerLabel}
+                                    style={{ padding: "10px" }}
+                                  >
                                     {column.key}
                                   </span>
                                   <MenuList
@@ -450,6 +483,7 @@ export default function StickyHeadTable() {
                                     exportFile_SpecGrade={exportFile_SpecGrade}
                                     classStyle={gradeStyle.moreOption}
                                     is_finallized={column.is_finallized}
+                                    importFile_SpecGrade={importFile_SpecGrade}
                                   ></MenuList>
                                 </TableCell>
                               )
@@ -499,7 +533,9 @@ export default function StickyHeadTable() {
                                           endAdornment={
                                             <InputAdornment
                                               position="end"
-                                              className={gradeStyle.gradeMaxText}
+                                              className={
+                                                gradeStyle.gradeMaxText
+                                              }
                                             >
                                               /100
                                             </InputAdornment>
@@ -534,25 +570,15 @@ export default function StickyHeadTable() {
           </Grid>
         </Paper>
       </div>
-      <Grid container
-        alignItems="center"
-        justifyContent="center">
-
-        <Button
-          sx={{ mr: 2 }}
-          variant="contained"
-          component="label"
-        >
+      <Grid container alignItems="center" justifyContent="center">
+        <Button sx={{ mr: 2 }} variant="contained" component="label">
           Upload File
           <input type="file" hidden onChange={onFileChange} accept=".csv" />
         </Button>
         <FileData selectedFile={selectedFile} />
       </Grid>
 
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center">
+      <Grid container alignItems="center" justifyContent="center">
         <Grid item xs={3}>
           <Button
             variant="contained"

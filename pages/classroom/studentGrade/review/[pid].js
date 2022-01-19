@@ -75,6 +75,8 @@ export default function StickyHeadTable(props) {
   const [studentID, setStudentID] = useState("");
   const [isReviewed, setIsReviewed] = useState(false);
   const [listOldReview, setListOldReview] = useState("");
+  const [listFinalizedReview, setListFinalizedReview] = useState([]);
+  const [checkAllFinalized, setcheckAllFinalized] = useState(false);
   const onSubmit = (data) => {
     if (data.comment !== "") {
       console.log("hello");
@@ -143,8 +145,10 @@ export default function StickyHeadTable(props) {
         .then((res) => {
           console.log("respone hello", res.data);
 
+          let listFinishReview = [];
           res.data.forEach((review) => {
             if (review.is_finallized == false) {
+              console.log("sfds147852");
               console.log("hi");
               let tempReview = false;
               tempReview = {
@@ -164,10 +168,25 @@ export default function StickyHeadTable(props) {
                 }
               });
             } else {
+              console.log("heasfsfsfsdf");
+              let tempReview = false;
+              tempReview = {
+                assignmentId: review.assignmentId._id,
+                classroomId: review.classroomId._id,
+                comments: review.comments.reverse(),
+                is_finallized: review.is_finallized,
+                cur_grade: review.cur_grade,
+                exp_grade: review.exp_grade,
+                explain: review.explain,
+                studentReviewId: review._id,
+              };
+              listFinishReview.push(tempReview);
               console.log("hello");
-              return;
             }
           });
+          setListFinalizedReview(listFinishReview);
+          console.log("33333333");
+          console.log("*********************", listFinalizedReview);
 
           console.log("currentReview", currentReview);
         })
@@ -194,9 +213,10 @@ export default function StickyHeadTable(props) {
       )
         .then((res) => {
           console.log("respone hello", res.data);
-
+          let listFinishReview = [];
           res.data.forEach((review) => {
-            if (review.is_finallized == false) {
+            if (review.is_finallized === false) {
+              setcheckAllFinalized(true);
               console.log("hi");
               let tempReview = false;
               tempReview = {
@@ -216,11 +236,28 @@ export default function StickyHeadTable(props) {
                 }
               });
             } else {
+              console.log("heasfsfsfsdf");
+              let tempReview = false;
+              tempReview = {
+                assignmentId: review.assignmentId._id,
+                classroomId: review.classroomId._id,
+                comments: review.comments.reverse(),
+                is_finallized: review.is_finallized,
+                cur_grade: review.cur_grade,
+                exp_grade: review.exp_grade,
+                explain: review.explain,
+                studentReviewId: review._id,
+                update_grade: review.upd_grade,
+              };
+              listFinishReview.push(tempReview);
               console.log("hello");
-              return;
             }
           });
+          setListFinalizedReview(listFinishReview);
+          console.log("33333333");
+          console.log("*********************", listFinalizedReview);
 
+          console.log("currentReview", currentReview);
           console.log("currentReview", currentReview);
         })
         .catch(function (error) {
@@ -427,7 +464,8 @@ export default function StickyHeadTable(props) {
               </TableContainer>
             </Paper>
           </div>
-          {userType != "Student" &&
+          {checkAllFinalized &&
+          userType != "Student" &&
           props.query.point != "**" &&
           isReviewed === false ? (
             <div className={gradeStyle.buttonSpace}>
@@ -453,6 +491,37 @@ export default function StickyHeadTable(props) {
           ) : (
             <></>
           )}
+          <p>Qúa trình phúc khảo</p>
+          {listFinalizedReview.map((finalizedReview) => (
+            <TableContainer component={Paper} className={gradeStyle.gradeBoard}>
+              <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Loại điểm</TableCell>
+                    <TableCell align="right">Điểm hiện tại</TableCell>
+                    <TableCell align="right">Điểm mong đợi</TableCell>
+                    <TableCell align="right">Điểm cuối cùng</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      {props.query.name}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="right">
+                      {props.query.point}
+                    </TableCell>
+                    <TableCell align="right">
+                      {finalizedReview.exp_grade}
+                    </TableCell>
+                    <TableCell align="right">
+                      {finalizedReview.update_grade}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ))}
 
           {currentReview !== false && props.query.point != "**" ? (
             <div className={gradeStyle.userComment}>

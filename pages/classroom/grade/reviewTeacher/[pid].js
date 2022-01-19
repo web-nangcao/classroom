@@ -78,7 +78,6 @@ export default function StickyHeadTable() {
     if (!pid) {
       return;
     }
-    console.log("use effect Student Grade");
     const data = { classroomId: pid };
     axiosApiCall(
       `student-review/teacher-get-reviews/${pid}`,
@@ -87,7 +86,6 @@ export default function StickyHeadTable() {
       []
     )
       .then((res) => {
-        console.log("ger list review", res.data);
         const listReviewReturn = res.data;
         const tempListReview = [];
 
@@ -95,16 +93,14 @@ export default function StickyHeadTable() {
         listReviewReturn.forEach((review) => {
           let studentcode = "";
           review.classroomId.members.forEach((member) => {
-            console.log("memberemail", member.email);
-            console.log("eview.studentId", review.studentId.email);
             if (member.email == review.studentId.email) {
-              console.log("hellosasfsfsdf", member.code);
               studentcode = member.code;
             }
           });
           const temp = {
             studentId: review.studentId._id,
             classroomId: review.classroomId._id,
+
             assignmentID: review.assignmentId._id,
             assignmentName: review.assignmentId.name,
             code: studentcode,
@@ -114,7 +110,6 @@ export default function StickyHeadTable() {
             is_finallized: review.is_finallized,
           };
           tempListReview.push(temp);
-          console.log("review ", temp);
           classroomName = review.classroomId.className;
         });
         setClassName(classroomName);
@@ -122,7 +117,6 @@ export default function StickyHeadTable() {
         setListReview(tempListReview.reverse());
       })
       .catch(function (error) {
-        console.log("lỗi rồi nè má");
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -141,14 +135,9 @@ export default function StickyHeadTable() {
   };
 
   const handleChange = (event, pos) => {
-    console.log(event.currentTarget.value);
-    console.log(pos);
-
     const position = pos.search("_");
     const row = pos.substring(0, position);
     const col = pos.substring(position + 1);
-    console.log(row);
-    console.log(col);
   };
 
   const handleMenu = (event) => {

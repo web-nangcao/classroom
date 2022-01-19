@@ -7,6 +7,7 @@ export default function MenuList({
   id,
   mark_assignment_finallized,
   exportFile_SpecGrade,
+  importFile_SpecGrade,
   classStyle,
   is_finallized,
 }) {
@@ -50,7 +51,7 @@ export default function MenuList({
             mark_assignment_finallized(id, is_finallized);
           }}
         >
-          Công bố điểm
+          {is_finallized ? "Không công khai điểm" : "Công bố điểm"}
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -60,7 +61,14 @@ export default function MenuList({
         >
           Export file
         </MenuItem>
-        <MenuItem onClick={() => handleClose}>Import file</MenuItem>
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            importFile_SpecGrade(id);
+          }}
+        >
+          Import file
+        </MenuItem>
       </Menu>
     </span>
   );
