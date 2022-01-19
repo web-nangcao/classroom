@@ -147,7 +147,7 @@ export default function StickyHeadTable(props) {
 
           let listFinishReview = [];
           res.data.forEach((review) => {
-            if (review.assignmentId._id == props.assignmentId) {
+            if (review.assignmentId._id == props.query.assignmentId) {
               if (review.is_finallized == false) {
                 console.log("sfds147852");
                 console.log("hi");
@@ -180,6 +180,7 @@ export default function StickyHeadTable(props) {
                   exp_grade: review.exp_grade,
                   explain: review.explain,
                   studentReviewId: review._id,
+                  update_grade: review.upd_grade,
                 };
                 listFinishReview.push(tempReview);
                 console.log("hello");
