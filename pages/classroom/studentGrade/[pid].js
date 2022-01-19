@@ -83,6 +83,9 @@ export default function StickyHeadTable() {
   const [rows, setRow] = useState([]);
   const [columns, setColumn] = useState([]);
   const [overal, setOveral] = useState("");
+  const [classroomName, setClassroomName] = useState(
+    Cookie.get("classroomName")
+  );
 
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
@@ -204,9 +207,7 @@ export default function StickyHeadTable() {
               <Grid>
                 <p className={gradeStyle.info}>
                   Môn học:{" "}
-                  <span className={gradeStyle.className}>
-                    Lập Trình ReactJs
-                  </span>
+                  <span className={gradeStyle.className}>{classroomName}</span>
                 </p>
               </Grid>
             </Grid>

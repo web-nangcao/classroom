@@ -22,6 +22,7 @@ import { Controller, useForm } from "react-hook-form";
 import libClassroom from "../../../lib/classroom";
 import axios from "axios";
 import Cookie from "js-cookie";
+import jsCookie from "js-cookie";
 
 const axiosApiCall = (url, method, headers = {}, data) =>
   axios({
@@ -105,6 +106,7 @@ export default function ClassroomDetailPage() {
             { id: 3, personPost: classDetailTemp.host },
             { id: 4, personPost: classDetailTemp.host },
           ];
+          console.log("**********", res.data);
           setListLesson(listLessonTemp);
           setLoadingPage(false);
           Cookie.set("classID", JSON.stringify(classDetailTemp._id));
@@ -123,6 +125,8 @@ export default function ClassroomDetailPage() {
     //console.log(pid);
     axiosApiCall(`get-class-detail/${pid}`, "get", headers, {})
       .then((res) => {
+        console.log("************************", res.data.resValue.classroom);
+        Cookie.set("classroomName", res.data.resValue.classroom.className);
         const classDetailTemp = res.data.resValue.classroom;
         console.log("respone", res.data);
         const members = res.data.resValue.classroom.members;
@@ -142,7 +146,7 @@ export default function ClassroomDetailPage() {
         console.log("assignment");
         console.log(classDetailTemp.assignments);
         setClassDetail(classDetailTemp);
-
+        console.log("asfsfsfsfsdfs55555");
         const listLessonTemp = [
           { personPost: classDetailTemp.host },
           { personPost: classDetailTemp.host },
