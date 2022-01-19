@@ -138,7 +138,12 @@ export default function StickyHeadTable() {
       []
     )
       .then((res) => {
-        updateData(res);
+        // CHECK STUDEN REDIRECT
+        if(res.data == "Ban khong co quyen xem cai nay"){
+          router.push(`/classroom/detail/${pid}`);
+        }else{
+          updateData(res);
+        }
       })
       .catch(function (error) {
         if (error.response) {
@@ -247,7 +252,7 @@ export default function StickyHeadTable() {
 
     const data_post_noti = {
       classroomId: pid,
-      notificationType: "teacher_reply_review",
+      notificationType: "teacher_finallized_grade",
       content: "Giáo viên vừa mới đăng điểm số",
     };
     axiosApiCall(`notification/create`, "post", headers, data_post_noti)

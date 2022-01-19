@@ -78,6 +78,27 @@ export default function StickyHeadTable() {
     if (!pid) {
       return;
     }
+
+    // CHECK STUDEN REDIRECT
+    const user = JSON.parse(Cookie.get("user"))
+    // console.log("heelafd",user);
+    const data_get_user = {
+      email: user.email,
+      classroomId: pid,
+    }
+    axiosApiCall(`user/get-usertype`, "post", headers, data_get_user)
+      .then((res) => {
+        if (res.data == "Student") {
+          router.push(`/classroom/detail/${pid}`);
+        }
+      })
+      .catch(function (error) {
+        console.log("Bị lỗi tải");
+        if (error.response) {
+          console.log(error);
+        }
+      });
+
     const data = { classroomId: pid };
     axiosApiCall(
       `student-review/teacher-get-reviews/${pid}`,
