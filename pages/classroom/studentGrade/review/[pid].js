@@ -418,7 +418,7 @@ export default function StickyHeadTable(props) {
                       <TableCell component="th" scope="row" align="right">
                         {props.query.point}
                       </TableCell>
-                      <TableCell align="right" align="right">
+                      <TableCell align="right">
                         {currentReview !== false ? currentReview.exp_grade : ""}
                       </TableCell>
                     </TableRow>

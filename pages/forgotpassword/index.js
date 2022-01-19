@@ -18,9 +18,8 @@ import Box from '@mui/material/Box';
 const axiosApiCall = (url, method, body = {}) =>
     axios({
         method,
-        // url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
+        url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
         // test
-        url: `http://localhost:3000/api/forgotpassword`,
         data: body,
     });
 
@@ -59,12 +58,10 @@ export default function ForgotPassword() {
         let check = validate(data.get('email'));
 
         if (check === true) {
-            axiosApiCall("user/renew-password", "post", email_forgot)
+            axiosApiCall("user/renew-password-email", "post", {email:email_forgot})
                 .then((res) => {
                     let data = res.data;
-                    if (data.success) {
-                        setSuccess("success");
-                    }
+                    setSuccess("success");
                 })
                 .catch(function (error) {
                     console.log(error);
