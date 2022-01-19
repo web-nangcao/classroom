@@ -21,7 +21,7 @@ export default function Lesson() {
       <Paper elevation={3} style={{ padding: "10px" }}>
         <h2>Up coming</h2>
         <p>Due Wednesday 10:00 PM – Đồ án giữa kỳ</p>
-        <p style={{ color: "blue", position: "relative", left: "200px" }}>
+        <p style={{ color: "blue", position: "relative", left: "80px" }}>
           View all
         </p>
       </Paper>

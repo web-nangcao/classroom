@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import List from "@mui/material/List";
@@ -72,15 +73,16 @@ export default function AddPeopleDialog({ handleAddPeolple }) {
   };
 
   return (
-    <div>
-      <Button onClick={handleClickOpen}>Thêm thành viên</Button>
+    <Grid>
+      <Button onClick={handleClickOpen} variant="contained"
+        component="label"><AddIcon></AddIcon>Thêm thành viên</Button>
       <SimpleDialog
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
         handleAddPeolple={handleAddPeolple}
       />
-    </div>
+    </Grid>
   );
 }
 
