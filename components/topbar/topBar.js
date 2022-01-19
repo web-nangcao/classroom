@@ -103,38 +103,42 @@ export default function TopBar({ handleAddClass }) {
 
     axiosApiCall("notification/get-notifications", "get", headers, {})
       .then((res) => {
+        console.log(res);
         let data = res.data;
         if (data) {
           let type = "";
           let classname = "";
           let content = "";
           let noti_arr = [];
+
           data.map(function (noti) {
+
             if (noti.notificationType == "teacher_reply_review") {
-               type = "Giáo viên trả lời review";
-               classname = noti.classroomId.className;
-               content = noti.content;
+              type = "Giáo viên trả lời review";
+              classname = noti.classroomId.className;
+              content = noti.content;
             }
 
             if (noti.notificationType == "teacher_finallized_grade") {
-               type = "Giáo viên chốt điểm cuối cùng";
-               classname = noti.classroomId.className;
-               content = noti.content;
+              type = "Giáo viên mới đăng điểm";
+              classname = noti.classroomId.className;
+              content = noti.content;
             }
 
-            
+
             if (noti.notificationType == "teacher_create_upd_grade") {
-               type = "Giáo viên cập nhập điểm";
-               classname = noti.classroomId.className;
-               content = noti.content;
+              type = "Giáo viên cập nhập điểm";
+              classname = noti.classroomId.className;
+              content = noti.content;
             }
+
 
             if (noti.notificationType == "student_request_review") {
-               type = "Học sinh khiếu nại điểm";
-               classname = noti.classroomId.className;
-               content = noti.content;
+              type = "Học sinh khiếu nại điểm";
+              classname = noti.classroomId.className;
+              content = noti.content;
             }
-            
+
 
             noti_arr.push({
               classname: classname,
@@ -214,15 +218,15 @@ export default function TopBar({ handleAddClass }) {
         <DialogContent >
           <Box width={350}>
             <Grid item xs={12}>
-              {notiList.map((noti,index) => (
-                <Grid key={index}  sx={{ mb:3,border:1 ,p:1,borderColor: 'grey.400',borderRadius:3}}>
+              {notiList.map((noti, index) => (
+                <Grid key={index} sx={{ mb: 3, border: 1, p: 1, borderColor: 'grey.400', borderRadius: 3 }}>
                   <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     spacing={{ xs: 1, sm: 1, md: 1 }}
                   >
-                    <Item>Lớp : <b>{ noti.classname}</b></Item>
-                    <Item>Loại :  <b>{ noti.type}</b></Item>
-                    <Item>Nội dung :  <b>{ noti.content}</b></Item>
+                    <Item>Lớp : <b>{noti.classname}</b></Item>
+                    <Item>Loại :  <b>{noti.type}</b></Item>
+                    <Item>Nội dung :  <b>{noti.content}</b></Item>
                   </Stack>
                 </Grid>
               ))}
