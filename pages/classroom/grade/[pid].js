@@ -139,9 +139,9 @@ export default function StickyHeadTable() {
     )
       .then((res) => {
         // CHECK STUDEN REDIRECT
-        if(res.data == "Ban khong co quyen xem cai nay"){
+        if (res.data == "Ban khong co quyen xem cai nay") {
           router.push(`/classroom/detail/${pid}`);
-        }else{
+        } else {
           updateData(res);
         }
       })
@@ -239,7 +239,10 @@ export default function StickyHeadTable() {
       headers,
       data
     )
-      .then((res) => {})
+      .then((res) => {
+        //updateData(res);
+        console.log("respone finalize", res.data);
+      })
       .catch(function (error) {
         if (error.response) {
           console.log(error.response.data);

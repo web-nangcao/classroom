@@ -147,41 +147,43 @@ export default function StickyHeadTable(props) {
 
           let listFinishReview = [];
           res.data.forEach((review) => {
-            if (review.is_finallized == false) {
-              console.log("sfds147852");
-              console.log("hi");
-              let tempReview = false;
-              tempReview = {
-                assignmentId: review.assignmentId._id,
-                classroomId: review.classroomId._id,
-                comments: review.comments.reverse(),
-                is_finallized: review.is_finallized,
-                cur_grade: review.cur_grade,
-                exp_grade: review.exp_grade,
-                explain: review.explain,
-                studentReviewId: review._id,
-              };
-              setCurrentReview(tempReview);
-              review.classroomId.members.map((member) => {
-                if (member.email == review.studentId.email) {
-                  setCode(member.code);
-                }
-              });
-            } else {
-              console.log("heasfsfsfsdf");
-              let tempReview = false;
-              tempReview = {
-                assignmentId: review.assignmentId._id,
-                classroomId: review.classroomId._id,
-                comments: review.comments.reverse(),
-                is_finallized: review.is_finallized,
-                cur_grade: review.cur_grade,
-                exp_grade: review.exp_grade,
-                explain: review.explain,
-                studentReviewId: review._id,
-              };
-              listFinishReview.push(tempReview);
-              console.log("hello");
+            if (review.assignmentId._id == props.assignmentId) {
+              if (review.is_finallized == false) {
+                console.log("sfds147852");
+                console.log("hi");
+                let tempReview = false;
+                tempReview = {
+                  assignmentId: review.assignmentId._id,
+                  classroomId: review.classroomId._id,
+                  comments: review.comments.reverse(),
+                  is_finallized: review.is_finallized,
+                  cur_grade: review.cur_grade,
+                  exp_grade: review.exp_grade,
+                  explain: review.explain,
+                  studentReviewId: review._id,
+                };
+                setCurrentReview(tempReview);
+                review.classroomId.members.map((member) => {
+                  if (member.email == review.studentId.email) {
+                    setCode(member.code);
+                  }
+                });
+              } else {
+                console.log("heasfsfsfsdf");
+                let tempReview = false;
+                tempReview = {
+                  assignmentId: review.assignmentId._id,
+                  classroomId: review.classroomId._id,
+                  comments: review.comments.reverse(),
+                  is_finallized: review.is_finallized,
+                  cur_grade: review.cur_grade,
+                  exp_grade: review.exp_grade,
+                  explain: review.explain,
+                  studentReviewId: review._id,
+                };
+                listFinishReview.push(tempReview);
+                console.log("hello");
+              }
             }
           });
           setListFinalizedReview(listFinishReview);
@@ -282,8 +284,26 @@ export default function StickyHeadTable(props) {
         explain: data.txtComment,
       };
       console.log(req);
+      let studentReviewId = "";
       axiosApiCall(`student-review/student-create-review`, "post", headers, req)
         .then((res) => {
+          console.log("studentreview", res.data);
+          studentReviewId = res.data._id;
+          const data_post_noti = {
+            classroomId: pid,
+            studentReviewId: studentReviewId,
+            notificationType: "student_request_review",
+            content: "Học sinh gửi yêu cầu phúc khảo",
+          };
+          axiosApiCall(`notification/create`, "post", headers, data_post_noti)
+            .then((res) => {})
+            .catch(function (error) {
+              if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+              }
+            });
           updateData(res);
         })
         .catch(function (error) {
@@ -351,6 +371,26 @@ export default function StickyHeadTable(props) {
         updateData(res);
         setIsReviewed(true);
         console.log("respone accept", res.data);
+        const data_post_noti = {
+          userId: res.data.studentId,
+          studentReviewId: res.data._id,
+          notificationType: "teacher_reply_review",
+          content: "Giáo viên phản hồi phúc khảo",
+        };
+
+        axiosApiCall(`notification/create`, "post", headers, data_post_noti)
+          .then((res) => {
+            console.log("asfssssf");
+          })
+          .catch(function (error) {
+            console.log("5555555");
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            }
+          });
+        console.log("respone accept", res.data);
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -375,6 +415,25 @@ export default function StickyHeadTable(props) {
         updateData(res);
         setIsReviewed(true);
         console.log("respone accept", res.data);
+        const data_post_noti = {
+          userId: res.data.studentId,
+          studentReviewId: res.data._id,
+          notificationType: "teacher_reply_review",
+          content: "Giáo viên phản hồi phúc khảo",
+        };
+
+        axiosApiCall(`notification/create`, "post", headers, data_post_noti)
+          .then((res) => {
+            console.log("asfssssf");
+          })
+          .catch(function (error) {
+            console.log("5555555");
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            }
+          });
       })
       .catch(function (error) {
         console.log("lỗi rồi nè má");
@@ -397,8 +456,29 @@ export default function StickyHeadTable(props) {
       console.log(req);
       axiosApiCall(`student-review/mark-finallized`, "post", headers, req)
         .then((res) => {
+          console.log("asdfsdfsdfsfsf", res.data);
           updateData(res);
           setIsReviewed(true);
+          const data_post_noti = {
+            userId: res.data.studentId,
+            classroomId: pid,
+            studentReviewId: res.data._id,
+            notificationType: "teacher_create_upd_grade",
+            content: "Giáo viên chấm điểm mới",
+          };
+
+          axiosApiCall(`notification/create`, "post", headers, data_post_noti)
+            .then((res) => {
+              console.log("asfssssf");
+            })
+            .catch(function (error) {
+              console.log("5555555");
+              if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+              }
+            });
           console.log("respone accept", res.data);
         })
         .catch(function (error) {
