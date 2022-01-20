@@ -99,6 +99,16 @@ export default function ClassroomDetailPage() {
           console.log("assignment");
           console.log(classDetailTemp.assignments);
           setClassDetail(classDetailTemp);
+          const members = res.data.resValue.classroom.members;
+          const user = JSON.parse(Cookie.get("user"));
+          members.forEach((member) => {
+            if (member.email == user.email) {
+              Cookie.set("userType", member.userType);
+              Cookie.set("code", member.code);
+              setUserType(member.userType);
+              setCode(member.code);
+            }
+          });
 
           const listLessonTemp = [
             { id: 1, personPost: classDetailTemp.host },
