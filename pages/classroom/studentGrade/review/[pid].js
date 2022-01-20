@@ -574,7 +574,7 @@ export default function StickyHeadTable(props) {
           )}
           <p>Qúa trình phúc khảo</p>
           {listFinalizedReview.map((finalizedReview) => (
-            <TableContainer component={Paper} className={gradeStyle.gradeBoard}>
+            <TableContainer key ={finalizedReview} component={Paper} className={gradeStyle.gradeBoard}>
               <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead>
                   <TableRow>
